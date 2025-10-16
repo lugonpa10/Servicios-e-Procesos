@@ -8,10 +8,11 @@
         {
             Console.WriteLine("por favor que se guarden los cambios");
             Console.WriteLine("hola");
+            Console.WriteLine("GUARDAR CAMBIOS GITHUB");
         }
 
 
-        public static void MenuGenerator(string[] opciones, MyDelegate[] functions´) { }
+        public static void MenuGenerator(string[] opciones, MyDelegate[] functions) { }
 
     }
 }
