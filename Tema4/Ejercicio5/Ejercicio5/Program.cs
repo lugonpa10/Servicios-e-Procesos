@@ -9,6 +9,7 @@
             Console.WriteLine("por favor que se guarden los cambios");
             Console.WriteLine("hola");
             Console.WriteLine("GUARDAR CAMBIOS GITHUB");
+            string odioGit = "no puedo mas";
         }
 
 
