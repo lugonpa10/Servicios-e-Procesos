@@ -17,7 +17,7 @@
             {
                 op = (a) => a * a * a;
             }
-            Console.WriteLine("prueba git");
+           
 
             Console.Write("Introduce el numero: ");
             num = Convert.ToInt32(Console.ReadLine());
