@@ -18,22 +18,43 @@ namespace Ejercicio1_1
             if (args.Length == 1)//TODO control excep
             {
 
-                
+
                 archivo = args[0];
-                using (StreamReader sr = new(archivo))
+
+                try
                 {
 
-                    //Console.WriteLine(sr.ReadToEnd());
+                    using (StreamReader sr = new(archivo))
+                    {
+
+                        //Console.WriteLine(sr.ReadToEnd());
+                    }
+
                 }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine($"The file was not found: '{e}'");
+                }
+                catch (DirectoryNotFoundException e)
+                {
+                    Console.WriteLine($"The directory was not found: '{e}'");
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine($"The file could not be opened: '{e}'");
+                }
+
+
 
 
             }
 
-            else if (args.Length == 2 && args[0].StartsWith("-n")) {
+            else if (args.Length == 2 && args[0].StartsWith("-n"))
+            {
 
                 string num = args[0].Substring(2);
                 tope = int.Parse(num);//TODO comprobar que es nº
-                archivo= args[1];
+                archivo = args[1];
 
                 using (StreamReader sr = new(archivo))
                 {
@@ -41,9 +62,9 @@ namespace Ejercicio1_1
                     string linea;
                     linea = sr.ReadLine();
 
-                    while (tope > cont && linea!= null)
+                    while (tope > cont && linea != null)
                     {
-                      Console.WriteLine(linea);
+                        Console.WriteLine(linea);
                         linea = sr.ReadLine();
                         cont++;
 

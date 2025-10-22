@@ -15,12 +15,37 @@ namespace Ejercicio1_1
         {
             string archivo;
 
+            if (args.Length == 0)
+            {
+                Console.WriteLine("No se ha pasado nigun argumento");
+
+            }
+
             if (args.Length == 2)
             {
                 archivo = args[0];
-                StreamWriter s = new(archivo);//TODO using
-                s.WriteLine(args[1]);
-                s.Close();
+                try
+                {
+
+                    using (StreamWriter s = new(archivo))
+                    {
+                        s.WriteLine(args[1]);
+                    }//TODO using
+
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine($"The file was not found: '{e}'");
+                }
+                catch (DirectoryNotFoundException e)
+                {
+                    Console.WriteLine($"The directory was not found: '{e}'");
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine($"The file could not be opened: '{e}'");
+                }
+
                 Console.WriteLine($"Se ha creado el archivo {archivo}");
 
 
