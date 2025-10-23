@@ -35,7 +35,7 @@ namespace Ejercicio1_1
                 }
                 catch (FileNotFoundException e)
                 {
-                    Console.WriteLine($"The file was not found: '{e}'");
+                    Console.WriteLine($"No se encontro el archivo: '{e}'");
                 }
                 catch (DirectoryNotFoundException e)
                 {
@@ -52,7 +52,7 @@ namespace Ejercicio1_1
 
 
             }
-            else if (args.Length == 3 && args[0].StartsWith("-a"))//TODO igual a -a 
+            else if (args.Length == 3 && args[0].Substring(1) == "-a")//TODO igual a -a 
             {
 
                 archivo = args[1];

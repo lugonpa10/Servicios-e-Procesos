@@ -6,9 +6,9 @@
         static void Main(string[] args)
         {
 
-            ls(args);//TODO comprobaciones sobre args
-            //  Ejercicio1_2.cat(args);
-            // Ejercicio1_3.NewFile(args);
+            //ls(args);//TODO comprobaciones sobre args
+              //Ejercicio1_2.cat(args);
+             Ejercicio1_3.NewFile(args);
 
 
 

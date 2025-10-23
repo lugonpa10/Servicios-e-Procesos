@@ -10,10 +10,14 @@ namespace Ejercicio1_1
     {
         public static void cat(string[] args)
         {
-            int tope;
+
             int cont = 0;
             string archivo;
 
+            if (args.Length == 0)
+            {
+                Console.WriteLine("No se ha pasado ningun argumento");
+            }
 
             if (args.Length == 1)//TODO control excep
             {
@@ -27,21 +31,21 @@ namespace Ejercicio1_1
                     using (StreamReader sr = new(archivo))
                     {
 
-                        //Console.WriteLine(sr.ReadToEnd());
+                        Console.WriteLine(sr.ReadToEnd());
                     }
 
                 }
                 catch (FileNotFoundException e)
                 {
-                    Console.WriteLine($"The file was not found: '{e}'");
+                    Console.WriteLine($"No se encontro el archivo: '{e}'");
                 }
                 catch (DirectoryNotFoundException e)
                 {
-                    Console.WriteLine($"The directory was not found: '{e}'");
+                    Console.WriteLine($"No se encontro el directorio: '{e}'");
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine($"The file could not be opened: '{e}'");
+                    Console.WriteLine($"No se pudo abrir el archivo: '{e}'");
                 }
 
 
@@ -51,28 +55,64 @@ namespace Ejercicio1_1
 
             else if (args.Length == 2 && args[0].StartsWith("-n"))
             {
+                bool bandera;
+                int n;
+
+
 
                 string num = args[0].Substring(2);
-                tope = int.Parse(num);//TODO comprobar que es nº
+                bandera = int.TryParse(num, out n);//TODO comprobar que es nº
                 archivo = args[1];
 
-                using (StreamReader sr = new(archivo))
+                if (!bandera)
+                {
+                    Console.WriteLine("No es un numero");
+                    return;
+                }
+
+
+                try
                 {
 
-                    string linea;
-                    linea = sr.ReadLine();
-
-                    while (tope > cont && linea != null)
+                    using (StreamReader sr = new(archivo))
                     {
-                        Console.WriteLine(linea);
+
+                        string linea;
                         linea = sr.ReadLine();
-                        cont++;
+
+                        while (cont < n && linea != null)
+                        {
+                            Console.WriteLine(linea);
+                            linea = sr.ReadLine();
+                            cont++;
 
 
+
+                        }
 
                     }
+                }
+                catch (FileNotFoundException e)
+                {
+
+                    Console.WriteLine($"No se encontro: '{e}'");
+
 
                 }
+                catch (DirectoryNotFoundException e)
+                {
+                    Console.WriteLine($"No se encontro el directorio: '{e}'");
+
+
+                }
+                catch (IOException e)
+                {
+
+                    Console.WriteLine($"No se pudo abrir el archivo: '{e}'");
+
+                }
+
+
 
 
             }
