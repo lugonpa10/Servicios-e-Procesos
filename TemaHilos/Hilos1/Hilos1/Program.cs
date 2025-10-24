@@ -24,7 +24,7 @@
 
         static bool running = true; // Booleana compartida para controlar los bucles
 
-        static public readonly object l = new object();
+        static public readonly object l = new object(); // readonly se utiliza por seguridad para que el testigo no pueda ser null
         static void Main(string[] args)
         {
             Thread thread = new Thread(writeDown);
@@ -33,7 +33,7 @@
             int i = 1;
             while (running)
             {
-                lock (l)
+                lock (l) // si en algun momento este hilo sale de la CPU, el otro hilo queda en espera hasta que se ejecute el codigo entre llaves.
                 {
 
                     Console.SetCursorPosition(1, 1);
