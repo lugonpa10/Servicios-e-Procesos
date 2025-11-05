@@ -6,7 +6,7 @@
         static void Main(string[] args)
         {
 
-            //ls(args);//TODO comprobaciones sobre args
+            //ls(args); 
               //Ejercicio1_2.cat(args);
              Ejercicio1_3.NewFile(args);
 
@@ -19,7 +19,8 @@
         public static void ls(string[] args)//TODO control excep
         {
 
-
+            try
+            {
 
             if (args.Length == 0)
             {
@@ -30,6 +31,7 @@
             {
 
                 DirectoryInfo d = new(args[0]);
+
 
 
                 if (!Directory.Exists(args[0]))
@@ -44,7 +46,7 @@
 
                 Console.WriteLine($"Subdirectorios de {d.Name}");
 
-                //TODO color de los primeros elementos
+            
 
                 foreach (DirectoryInfo dir in d.GetDirectories())
                 {
@@ -62,12 +64,24 @@
                 Console.ResetColor();
 
             }
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine($"No se encontro el archivo: '{e}'");
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Console.WriteLine($"No se encontro el directorio: '{e}'");
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine($"No se pudo abrir el archivo: '{e}'");
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine($"No tienes los permisos necesarios: '{e}'");
 
-
-
-
-
-
+            }
 
         }
     }

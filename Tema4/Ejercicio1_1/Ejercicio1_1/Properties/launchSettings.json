@@ -2,7 +2,7 @@
   "profiles": {
     "Ejercicio1_1": {
       "commandName": "Project",
-      "commandLineArgs": "texto.txt \"este es un nuevo texto\"\r\n\r\n"
+      "commandLineArgs": "-a texto.txt \"algo\"\r\n\r\n"
     }
   }
 }

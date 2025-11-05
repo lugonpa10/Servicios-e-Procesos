@@ -19,7 +19,7 @@ namespace Ejercicio1_1
                 Console.WriteLine("No se ha pasado ningun argumento");
             }
 
-            if (args.Length == 1)//TODO control excep
+            if (args.Length == 1) 
             {
 
 
@@ -35,7 +35,7 @@ namespace Ejercicio1_1
                     }
 
                 }
-                catch (FileNotFoundException e)
+                catch (FileNotFoundException e)//permisos
                 {
                     Console.WriteLine($"No se encontro el archivo: '{e}'");
                 }
@@ -47,8 +47,11 @@ namespace Ejercicio1_1
                 {
                     Console.WriteLine($"No se pudo abrir el archivo: '{e}'");
                 }
+                catch (UnauthorizedAccessException e)
+                {
+                    Console.WriteLine($"No tienes los permisos necesarios: '{e}'");
 
-
+                }
 
 
             }
@@ -61,7 +64,7 @@ namespace Ejercicio1_1
 
 
                 string num = args[0].Substring(2);
-                bandera = int.TryParse(num, out n);//TODO comprobar que es nº
+                bandera = int.TryParse(num, out n); 
                 archivo = args[1];
 
                 if (!bandera)

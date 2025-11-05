@@ -13,6 +13,7 @@ namespace Ejercicio1_1
 
         public static void NewFile(string[] args)//TODO control excep
         {
+            
             string archivo;
 
             if (args.Length == 0)
@@ -24,41 +25,40 @@ namespace Ejercicio1_1
             if (args.Length == 2)
             {
                 archivo = args[0];
-                try
-                {
 
+                comprobaciones(() =>
+                {
                     using (StreamWriter s = new(archivo))
                     {
                         s.WriteLine(args[1]);
                     }//TODO using
 
-                }
-                catch (FileNotFoundException e)
-                {
-                    Console.WriteLine($"No se encontro el archivo: '{e}'");
-                }
-                catch (DirectoryNotFoundException e)
-                {
-                    Console.WriteLine($"The directory was not found: '{e}'");
-                }
-                catch (IOException e)
-                {
-                    Console.WriteLine($"The file could not be opened: '{e}'");
-                }
+                });
+
+
+
 
                 Console.WriteLine($"Se ha creado el archivo {archivo}");
 
 
 
 
+
+
             }
-            else if (args.Length == 3 && args[0].Substring(1) == "-a")//TODO igual a -a 
+            else if (args.Length == 3 && args[0] == "-a")//TODO  funcion para no repetir codigo
             {
 
                 archivo = args[1];
-                StreamWriter s = new(archivo, true);
-                s.WriteLine(args[2]);
-                s.Close();
+
+                comprobaciones(() =>
+                {
+                    using (StreamWriter s = new(archivo))
+                    {
+                        s.WriteLine(args[2]);
+                    }
+
+                });
                 Console.WriteLine($"Se ha sobreescrito el archivo {archivo}");
 
             }
@@ -66,6 +66,30 @@ namespace Ejercicio1_1
 
 
 
+
+        }
+
+        static void comprobaciones(Action action)
+        {
+
+            try
+            {
+
+                action();
+
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine($"No se encontro el archivo: '{e}'");
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Console.WriteLine($"The directory was not found: '{e}'");
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine($"The file could not be opened: '{e}'");
+            }
 
         }
     }
