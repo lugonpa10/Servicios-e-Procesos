@@ -61,7 +61,7 @@
             });
             th1.Start();
             th2.Start();
-            //th1.Join();
+            th1.Join();
             th2.Join();
             if (cont >= 500)
             {
