@@ -21,7 +21,7 @@
                             }
                             cont++;
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"Hilo 1: {cont}");
+                            Console.Write($"{cont}\t");
                             Console.ResetColor();
 
                             if (cont >= 500)
@@ -45,7 +45,7 @@
                         }
                         cont--;
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Hilo 2: {cont}");
+                        Console.Write($"{cont}\t");
                         Console.ResetColor();
                         if (cont <= -500)
                         {
