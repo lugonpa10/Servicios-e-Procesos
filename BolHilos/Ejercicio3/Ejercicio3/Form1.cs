@@ -32,7 +32,7 @@ namespace Ejercicio3
         private int NumRandom()
         {
             Random rd = new Random();
-            return rd.Next(1000, 10000);
+            return rd.Next(1000, 5000);
         }
 
         private async Task empezarDescarga()
