@@ -35,14 +35,14 @@
             // 
             // txtFileName
             // 
-            this.txtFileName.Location = new System.Drawing.Point(503, 69);
+            this.txtFileName.Location = new System.Drawing.Point(448, 58);
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(100, 20);
             this.txtFileName.TabIndex = 0;
             // 
             // btnDescarga
             // 
-            this.btnDescarga.Location = new System.Drawing.Point(519, 122);
+            this.btnDescarga.Location = new System.Drawing.Point(461, 110);
             this.btnDescarga.Name = "btnDescarga";
             this.btnDescarga.Size = new System.Drawing.Size(75, 23);
             this.btnDescarga.TabIndex = 1;
@@ -55,7 +55,7 @@
             this.txtResults.Location = new System.Drawing.Point(60, 45);
             this.txtResults.Multiline = true;
             this.txtResults.Name = "txtResults";
-            this.txtResults.Size = new System.Drawing.Size(341, 204);
+            this.txtResults.Size = new System.Drawing.Size(285, 204);
             this.txtResults.TabIndex = 2;
             // 
             // Form1

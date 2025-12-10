@@ -57,6 +57,7 @@
 
             int id = (int)numCaballo;
 
+            //Random rdhilo = new Random(id * DateTime.Now.Millisecond); preguntar duda lock(rd)
 
             int pos = 0;
 

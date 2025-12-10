@@ -46,9 +46,9 @@ namespace Ejercicio3
             }
             int delay = NumRandom();
 
-            Task<string> descarga = DownloadFileAsync(archivo, delay);
 
-            string resultado = await descarga;
+
+            string resultado = await DownloadFileAsync(archivo, delay);
 
             txtResults.AppendText(resultado + "\n");
 
