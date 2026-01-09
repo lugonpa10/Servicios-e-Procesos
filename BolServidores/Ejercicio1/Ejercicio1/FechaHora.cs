@@ -23,6 +23,7 @@ namespace Ejercicio1
                 {
                     s.Bind(ie);
                     Console.WriteLine($"Puerto {Port} libre");
+                    s.Listen(10);
 
                 }
                 catch (SocketException e) when (e.ErrorCode == 10048)
@@ -33,10 +34,9 @@ namespace Ejercicio1
                 {
                     Console.WriteLine($"Error: {e.SocketErrorCode} - {e.Message}");
                 }
-                s.Bind(ie);
-                s.Listen(10);
+         ;
                 Console.WriteLine($"Se ha iniciado el servidor"
-                    + $"Escuchando en {ie.Address}:{ie.Port}");
+                    + $" Escuchando en {ie.Address}:{ie.Port}");
 
                 while (ServerRunning)
                 {
@@ -58,16 +58,65 @@ namespace Ejercicio1
                 IPEndPoint ieClient = (IPEndPoint)sClient.RemoteEndPoint;
                 Console.WriteLine($"Cliente conectado: {ieClient.Address}" +
                     $"en puerto {ieClient.Port}");
+
                 Encoding codificacion = Console.OutputEncoding;
-                using (NetworkStream ns = new NetworkStream(sClient)) 
-                using(StreamWriter sw = new StreamWriter(ns))
-                using(StreamReader sr = new StreamReader(ns))
+                using (NetworkStream ns = new NetworkStream(sClient))
+                using (StreamWriter sw = new StreamWriter(ns))
+                using (StreamReader sr = new StreamReader(ns))
                 {
-                    DateTime date = DateTime.Now;
                     sw.AutoFlush = true;
-                  
-                    
-                    
+                    string? opcion = "";
+                    sw.WriteLine("Bienvenido a mi servidor,introduce un comando");
+                    while (opcion != null)
+                    {
+                        try
+                        {
+                            opcion = sr.ReadLine();
+                            if (opcion != null)
+                            {
+
+                                sw.WriteLine("Introduce otro comando: ");
+                                switch (opcion)
+                                {
+                                    case "time":
+                                        sw.WriteLine(DateTime.Now.ToString("T"));
+                                        break;
+                                    case "date":
+                                        sw.WriteLine(DateTime.Now.ToString("d"));
+                                        break;
+
+                                    case "all":
+                                        sw.WriteLine(DateTime.Now.ToString("G"));
+                                        break;
+
+                                    case "close":
+                                        sw.WriteLine("Introduce la contraseña");
+                                        int password;
+
+
+
+                                        break;
+                                }
+
+
+                            }
+
+                        }
+                        catch (IOException)
+                        {
+                            opcion = null;
+
+                        }
+
+                    }
+                    Console.WriteLine("El cliente ha cerrado la conexion");
+
+
+
+
+
+
+
                 }
             }
         }
