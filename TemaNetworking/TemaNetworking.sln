@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36429.23 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemaNetworking", "TemaNetworking\TemaNetworking.csproj", "{B8C94ABD-2A8E-4732-A709-D9612F8F74D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClienteEco", "ClienteEco\ClienteEco.csproj", "{C619F569-2205-487D-931B-D9FB73CABDB2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8C94ABD-2A8E-4732-A709-D9612F8F74D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C94ABD-2A8E-4732-A709-D9612F8F74D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8C94ABD-2A8E-4732-A709-D9612F8F74D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8C94ABD-2A8E-4732-A709-D9612F8F74D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C619F569-2205-487D-931B-D9FB73CABDB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C619F569-2205-487D-931B-D9FB73CABDB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C619F569-2205-487D-931B-D9FB73CABDB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C619F569-2205-487D-931B-D9FB73CABDB2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {47C0197F-7DA9-4BE8-BC97-4000C7996B81}
+	EndGlobalSection
+EndGlobal
