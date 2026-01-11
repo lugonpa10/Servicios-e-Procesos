@@ -149,6 +149,7 @@ namespace Ejercicio1
 
                             }
                         }
+
                         catch (IOException)
                         {
                             opcion = null;

@@ -32,10 +32,10 @@
             this.btnDate = new System.Windows.Forms.Button();
             this.btnAll = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblResul = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.chkModal = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnTime
@@ -76,18 +76,19 @@
             this.btnClose.TabIndex = 3;
             this.btnClose.Text = "close";
             this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // textBox1
+            // txtPassword
             // 
-            this.textBox1.Location = new System.Drawing.Point(280, 57);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(132, 20);
-            this.textBox1.TabIndex = 4;
+            this.txtPassword.Location = new System.Drawing.Point(280, 57);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.Size = new System.Drawing.Size(132, 20);
+            this.txtPassword.TabIndex = 4;
             // 
             // lblResul
             // 
             this.lblResul.AutoSize = true;
-            this.lblResul.Location = new System.Drawing.Point(323, 112);
+            this.lblResul.Location = new System.Drawing.Point(211, 112);
             this.lblResul.Name = "lblResul";
             this.lblResul.Size = new System.Drawing.Size(35, 13);
             this.lblResul.TabIndex = 5;
@@ -102,20 +103,33 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Password";
             // 
+            // chkModal
+            // 
+            this.chkModal.AutoSize = true;
+            this.chkModal.Location = new System.Drawing.Point(199, 163);
+            this.chkModal.Name = "chkModal";
+            this.chkModal.Size = new System.Drawing.Size(78, 17);
+            this.chkModal.TabIndex = 7;
+            this.chkModal.Text = "Ip + Puerto";
+            this.chkModal.UseVisualStyleBackColor = true;
+            this.chkModal.CheckedChanged += new System.EventHandler(this.Form1_Load);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(446, 268);
+            this.Controls.Add(this.chkModal);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblResul);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnAll);
             this.Controls.Add(this.btnDate);
             this.Controls.Add(this.btnTime);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,10 +141,10 @@
         private System.Windows.Forms.Button btnDate;
         private System.Windows.Forms.Button btnAll;
         private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label lblResul;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.CheckBox chkModal;
     }
 }
 

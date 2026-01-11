@@ -60,7 +60,7 @@ namespace Cliente
         private async void btnTime_Click(object sender, EventArgs e)
         {
             lblResul.Text = await comunicacionAsync("time");
-
+            
         }
 
         private async void btnAll_Click(object sender, EventArgs e)
@@ -73,6 +73,23 @@ namespace Cliente
             lblResul.Text = await comunicacionAsync("date");
         }
 
+        private async void btnClose_Click(object sender, EventArgs e)
+        {
+            lblResul.Text = await comunicacionAsync($"close {txtPassword.Text}");
+        }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Form2 f2 = new Form2();
+            if (chkModal.Checked)
+            {
+                f2.txtIp.Text = ip.ToString();
+                f2.txtPuerto.Text = puerto.ToString();
+                f2.ShowDialog();
+            }
+         
+        }
+
+       
     }
 }
