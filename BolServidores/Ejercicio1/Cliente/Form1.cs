@@ -40,24 +40,36 @@ namespace Cliente
 
 
 
+
+
+
                     }
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex) when (ex is SocketException || ex is IOException)
             {
+                return ex.Message;
 
+            }
+            catch (Exception ex)
+            {
+                return "Error inesperado";
             }
         }
 
 
         private void envioDatos(object sender, EventArgs e)
         {
+          
 
         }
-        private void btnTime_Click(object sender, EventArgs e)
+        private async Task btnTime_Click(object sender, EventArgs e)
         {
-            lblResul.Text = DateTime.Now.ToString("T");
+            string hora = DateTime.Now.ToString("T");
+            hora = await comunicacionAsync();
+            lblResul.Text = hora;
+
         }
     }
 }

@@ -39,35 +39,37 @@
             // 
             // btnTime
             // 
-            this.btnTime.Location = new System.Drawing.Point(223, 91);
+            this.btnTime.Location = new System.Drawing.Point(68, 59);
             this.btnTime.Name = "btnTime";
             this.btnTime.Size = new System.Drawing.Size(75, 23);
             this.btnTime.TabIndex = 0;
             this.btnTime.Text = "time";
             this.btnTime.UseVisualStyleBackColor = true;
-            this.btnTime.Click += new System.EventHandler(this.btnTime_Click);
+            this.btnTime.Click += new System.EventHandler(this.envioDatos);
             // 
             // btnDate
             // 
-            this.btnDate.Location = new System.Drawing.Point(223, 195);
+            this.btnDate.Location = new System.Drawing.Point(68, 163);
             this.btnDate.Name = "btnDate";
             this.btnDate.Size = new System.Drawing.Size(75, 23);
             this.btnDate.TabIndex = 1;
             this.btnDate.Text = "date";
             this.btnDate.UseVisualStyleBackColor = true;
+            this.btnDate.Click += new System.EventHandler(this.envioDatos);
             // 
             // btnAll
             // 
-            this.btnAll.Location = new System.Drawing.Point(223, 139);
+            this.btnAll.Location = new System.Drawing.Point(68, 107);
             this.btnAll.Name = "btnAll";
             this.btnAll.Size = new System.Drawing.Size(75, 23);
             this.btnAll.TabIndex = 2;
             this.btnAll.Text = "all";
             this.btnAll.UseVisualStyleBackColor = true;
+            this.btnAll.Click += new System.EventHandler(this.envioDatos);
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(366, 91);
+            this.btnClose.Location = new System.Drawing.Point(199, 54);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 3;
@@ -76,7 +78,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(447, 94);
+            this.textBox1.Location = new System.Drawing.Point(280, 57);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(132, 20);
             this.textBox1.TabIndex = 4;
@@ -84,7 +86,7 @@
             // lblResul
             // 
             this.lblResul.AutoSize = true;
-            this.lblResul.Location = new System.Drawing.Point(490, 149);
+            this.lblResul.Location = new System.Drawing.Point(323, 112);
             this.lblResul.Name = "lblResul";
             this.lblResul.Size = new System.Drawing.Size(35, 13);
             this.lblResul.TabIndex = 5;
@@ -93,7 +95,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(481, 78);
+            this.label1.Location = new System.Drawing.Point(314, 41);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 6;
@@ -103,7 +105,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(446, 268);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblResul);
             this.Controls.Add(this.textBox1);
