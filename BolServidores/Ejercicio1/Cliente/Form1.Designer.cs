@@ -35,6 +35,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lblResul = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.SuspendLayout();
             // 
             // btnTime
@@ -45,7 +46,7 @@
             this.btnTime.TabIndex = 0;
             this.btnTime.Text = "time";
             this.btnTime.UseVisualStyleBackColor = true;
-            this.btnTime.Click += new System.EventHandler(this.envioDatos);
+            this.btnTime.Click += new System.EventHandler(this.btnTime_Click);
             // 
             // btnDate
             // 
@@ -55,7 +56,7 @@
             this.btnDate.TabIndex = 1;
             this.btnDate.Text = "date";
             this.btnDate.UseVisualStyleBackColor = true;
-            this.btnDate.Click += new System.EventHandler(this.envioDatos);
+            this.btnDate.Click += new System.EventHandler(this.btnDate_Click);
             // 
             // btnAll
             // 
@@ -65,7 +66,7 @@
             this.btnAll.TabIndex = 2;
             this.btnAll.Text = "all";
             this.btnAll.UseVisualStyleBackColor = true;
-            this.btnAll.Click += new System.EventHandler(this.envioDatos);
+            this.btnAll.Click += new System.EventHandler(this.btnAll_Click);
             // 
             // btnClose
             // 
@@ -129,6 +130,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label lblResul;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ColorDialog colorDialog1;
     }
 }
 

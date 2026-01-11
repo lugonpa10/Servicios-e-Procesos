@@ -22,7 +22,7 @@ namespace Cliente
         IPAddress ip = IPAddress.Parse("127.0.0.1");
         int puerto = 31416;
 
-        private async Task<string> comunicacionAsync()
+        private async Task<string> comunicacionAsync(string comando)
         {
             try
             {
@@ -37,12 +37,9 @@ namespace Cliente
                     {
                         sw.AutoFlush = true;
                         string mensaje = await sr.ReadLineAsync();
-
-
-
-
-
-
+                        await sw.WriteLineAsync(comando);
+                        mensaje = await sr.ReadLineAsync();
+                        return mensaje;
                     }
 
                 }
@@ -59,17 +56,23 @@ namespace Cliente
         }
 
 
-        private void envioDatos(object sender, EventArgs e)
+
+        private async void btnTime_Click(object sender, EventArgs e)
         {
-          
+            lblResul.Text = await comunicacionAsync("time");
 
         }
-        private async Task btnTime_Click(object sender, EventArgs e)
-        {
-            string hora = DateTime.Now.ToString("T");
-            hora = await comunicacionAsync();
-            lblResul.Text = hora;
 
+        private async void btnAll_Click(object sender, EventArgs e)
+        {
+            lblResul.Text = await comunicacionAsync("all");
         }
+
+        private async void btnDate_Click(object sender, EventArgs e)
+        {
+            lblResul.Text = await comunicacionAsync("date");
+        }
+
+
     }
 }

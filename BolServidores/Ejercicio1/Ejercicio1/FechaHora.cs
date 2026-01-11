@@ -52,17 +52,13 @@ namespace Ejercicio1
             }
 
         }
-
-
-
-
         private void ClientDispatcher(Socket sClient)
         {
             using (sClient)
             {
                 IPEndPoint ieClient = (IPEndPoint)sClient.RemoteEndPoint;
                 Console.WriteLine($"Cliente conectado: {ieClient.Address}" +
-                    $"en puerto {ieClient.Port}");
+                    $" en puerto {ieClient.Port}");
 
                 Encoding codificacion = Console.OutputEncoding;
                 using (NetworkStream ns = new NetworkStream(sClient))
@@ -91,21 +87,21 @@ namespace Ejercicio1
 
                                     }
                                     string[] contraseña = opcion.Split(" ");
-                                    
-                                        if (contraseña.Length < 2)
-                                        {
-                                            sw.WriteLine("No se ha enviado la contrasenha");
-                                        }
-                                        else if (contraseña[1] != contraseñaCorrecta)
-                                        {
-                                            sw.WriteLine("La contrasenha es incorrecta");
 
-                                        }
-                                        else
-                                        {
-                                            sw.WriteLine("Contrasenha Correcta");
-                                            StopServer();
-                                        }
+                                    if (contraseña.Length < 2)
+                                    {
+                                        sw.WriteLine("No se ha enviado la contrasenha");
+                                    }
+                                    else if (contraseña[1] != contraseñaCorrecta)
+                                    {
+                                        sw.WriteLine("La contrasenha es incorrecta");
+
+                                    }
+                                    else
+                                    {
+                                        sw.WriteLine("Contrasenha Correcta");
+                                        StopServer();
+                                    }
                                 }
                                 catch (FileNotFoundException e)
                                 {
@@ -124,9 +120,13 @@ namespace Ejercicio1
                                     sw.WriteLine($"No se pudo abrir el archivo: '{e}'");
                                 }
                             }
+                            else if (opcion != "time" && opcion != "date" && opcion != "all")
+                            {
+                                sw.WriteLine("El comando no es valido");
+                                StopServer();
+                            }
                             else
                             {
-                                sw.WriteLine("Introduce otro comando: ");
                                 switch (opcion)
                                 {
                                     case "time":
@@ -148,12 +148,10 @@ namespace Ejercicio1
                                 }
 
                             }
-
                         }
                         catch (IOException)
                         {
                             opcion = null;
-
                         }
                     }
                 }
