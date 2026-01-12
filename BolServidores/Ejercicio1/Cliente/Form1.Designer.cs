@@ -90,9 +90,9 @@
             this.lblResul.AutoSize = true;
             this.lblResul.Location = new System.Drawing.Point(211, 112);
             this.lblResul.Name = "lblResul";
-            this.lblResul.Size = new System.Drawing.Size(35, 13);
+            this.lblResul.Size = new System.Drawing.Size(115, 13);
             this.lblResul.TabIndex = 5;
-            this.lblResul.Text = "label1";
+            this.lblResul.Text = "Esperando Comando...";
             // 
             // label1
             // 

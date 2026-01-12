@@ -14,8 +14,11 @@ namespace Ejercicio1
     internal class FechaHora
     {
         public bool ServerRunning { set; get; } = true;
-        public int Port { set; get; } = 31416;
+        public int Port { set; get; } = 135;
+        public int[] puertosAlternativos = { 135, 135, 135, 31416 };
+        public bool puertoOcupado = true;
         private Socket s;
+        private int i = 0;
 
         public void initServer()
         {
@@ -24,25 +27,55 @@ namespace Ejercicio1
 
             try
             {
-                s.Bind(ie);
-                Console.WriteLine($"Puerto {Port} libre");
+                while (puertoOcupado)
+                {
+                    try
+                    {
+                        puertoOcupado = false;
+                        s.Bind(ie);
+                    }
+                    catch (SocketException e) when (e.ErrorCode == 10048)
+                    {
+                        puertoOcupado = true;
+
+                        ie.Port = puertosAlternativos[i];
+                        i++;
+                    }
+
+                }
+
+
+
+
+
+                Console.WriteLine($"Puerto {ie.Port} libre");
+
                 s.Listen(10);
-                Console.WriteLine($"Se ha iniciado el servidor"
-                    + $" Escuchando en {ie.Address}:{ie.Port}");
+                Console.WriteLine($"Se ha iniciado el servidor" + $" Escuchando en {ie.Address}:{ie.Port}");
+
+
 
                 while (ServerRunning)
                 {
                     Socket client = s.Accept();
                     Thread hilo = new Thread(() => ClientDispatcher(client));
+                    hilo.IsBackground = true;
                     hilo.Start();
 
 
                 }
 
             }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Puertos ocupados");
+            }
             catch (SocketException e) when (e.ErrorCode == 10048)
             {
                 Console.WriteLine($"Puerto {Port} en uso");
+
+
+
             }
             catch (SocketException)
             {
@@ -73,7 +106,7 @@ namespace Ejercicio1
                         try
                         {
                             opcion = sr.ReadLine();
-                            if (opcion != null && opcion.StartsWith("close"))
+                            if (opcion != null && opcion.StartsWith("close "))
                             {
                                 string programData = Environment.GetEnvironmentVariable("PROGRAMDATA");
                                 string archivo = "password.txt";
@@ -123,7 +156,6 @@ namespace Ejercicio1
                             else if (opcion != "time" && opcion != "date" && opcion != "all")
                             {
                                 sw.WriteLine("El comando no es valido");
-                                StopServer();
                             }
                             else
                             {
@@ -131,18 +163,15 @@ namespace Ejercicio1
                                 {
                                     case "time":
                                         sw.WriteLine(DateTime.Now.ToString("T"));
-                                        StopServer();
 
                                         break;
                                     case "date":
                                         sw.WriteLine(DateTime.Now.ToString("d"));
-                                        StopServer();
 
                                         break;
 
                                     case "all":
                                         sw.WriteLine(DateTime.Now.ToString("G"));
-                                        StopServer();
 
                                         break;
                                 }
