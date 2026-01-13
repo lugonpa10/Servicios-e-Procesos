@@ -37,23 +37,15 @@ namespace Ejercicio1
                     catch (SocketException e) when (e.ErrorCode == 10048)
                     {
                         puertoOcupado = true;
-
                         ie.Port = puertosAlternativos[i];
                         i++;
                     }
 
                 }
-
-
-
-
-
                 Console.WriteLine($"Puerto {ie.Port} libre");
 
                 s.Listen(10);
                 Console.WriteLine($"Se ha iniciado el servidor" + $" Escuchando en {ie.Address}:{ie.Port}");
-
-
 
                 while (ServerRunning)
                 {
@@ -73,8 +65,6 @@ namespace Ejercicio1
             catch (SocketException e) when (e.ErrorCode == 10048)
             {
                 Console.WriteLine($"Puerto {Port} en uso");
-
-
 
             }
             catch (SocketException)
@@ -106,7 +96,7 @@ namespace Ejercicio1
                         try
                         {
                             opcion = sr.ReadLine();
-                            if (opcion != null && opcion.StartsWith("close "))
+                            if (opcion != null && (opcion == "close" || opcion.StartsWith("close ")))
                             {
                                 string programData = Environment.GetEnvironmentVariable("PROGRAMDATA");
                                 string archivo = "password.txt";
@@ -183,6 +173,7 @@ namespace Ejercicio1
                         {
                             opcion = null;
                         }
+
                     }
                 }
             }

@@ -60,7 +60,7 @@ namespace Cliente
         private async void btnTime_Click(object sender, EventArgs e)
         {
             lblResul.Text = await comunicacionAsync("time");
-            
+
         }
 
         private async void btnAll_Click(object sender, EventArgs e)
@@ -75,7 +75,16 @@ namespace Cliente
 
         private async void btnClose_Click(object sender, EventArgs e)
         {
-            lblResul.Text = await comunicacionAsync($"close {txtPassword.Text}");
+            if (txtPassword.Text.Equals(""))
+            {
+                lblResul.Text = await comunicacionAsync("close");
+            }
+            else
+            {
+                lblResul.Text = await comunicacionAsync($"close {txtPassword.Text}");
+
+            }
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -87,9 +96,9 @@ namespace Cliente
                 f2.txtPuerto.Text = puerto.ToString();
                 f2.ShowDialog();
             }
-         
+
         }
 
-       
+
     }
 }
