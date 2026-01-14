@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnTime = new System.Windows.Forms.Button();
             this.btnDate = new System.Windows.Forms.Button();
             this.btnAll = new System.Windows.Forms.Button();
@@ -35,7 +36,7 @@
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblResul = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkModal = new System.Windows.Forms.CheckBox();
+            this.btnModal = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnTime
@@ -46,7 +47,7 @@
             this.btnTime.TabIndex = 0;
             this.btnTime.Text = "time";
             this.btnTime.UseVisualStyleBackColor = true;
-            this.btnTime.Click += new System.EventHandler(this.btnTime_Click);
+            this.btnTime.Click += new System.EventHandler(this.envioDeComandos);
             // 
             // btnDate
             // 
@@ -56,7 +57,7 @@
             this.btnDate.TabIndex = 1;
             this.btnDate.Text = "date";
             this.btnDate.UseVisualStyleBackColor = true;
-            this.btnDate.Click += new System.EventHandler(this.btnDate_Click);
+            this.btnDate.Click += new System.EventHandler(this.envioDeComandos);
             // 
             // btnAll
             // 
@@ -66,7 +67,7 @@
             this.btnAll.TabIndex = 2;
             this.btnAll.Text = "all";
             this.btnAll.UseVisualStyleBackColor = true;
-            this.btnAll.Click += new System.EventHandler(this.btnAll_Click);
+            this.btnAll.Click += new System.EventHandler(this.envioDeComandos);
             // 
             // btnClose
             // 
@@ -88,7 +89,7 @@
             // lblResul
             // 
             this.lblResul.AutoSize = true;
-            this.lblResul.Location = new System.Drawing.Point(211, 112);
+            this.lblResul.Location = new System.Drawing.Point(65, 220);
             this.lblResul.Name = "lblResul";
             this.lblResul.Size = new System.Drawing.Size(115, 13);
             this.lblResul.TabIndex = 5;
@@ -103,23 +104,22 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Password";
             // 
-            // chkModal
+            // btnModal
             // 
-            this.chkModal.AutoSize = true;
-            this.chkModal.Location = new System.Drawing.Point(199, 163);
-            this.chkModal.Name = "chkModal";
-            this.chkModal.Size = new System.Drawing.Size(78, 17);
-            this.chkModal.TabIndex = 7;
-            this.chkModal.Text = "Ip + Puerto";
-            this.chkModal.UseVisualStyleBackColor = true;
-            this.chkModal.CheckedChanged += new System.EventHandler(this.Form1_Load);
+            this.btnModal.Location = new System.Drawing.Point(199, 107);
+            this.btnModal.Name = "btnModal";
+            this.btnModal.Size = new System.Drawing.Size(75, 23);
+            this.btnModal.TabIndex = 8;
+            this.btnModal.Text = "Ip + Puerto";
+            this.btnModal.UseVisualStyleBackColor = true;
+            this.btnModal.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(446, 268);
-            this.Controls.Add(this.chkModal);
+            this.ClientSize = new System.Drawing.Size(599, 268);
+            this.Controls.Add(this.btnModal);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblResul);
             this.Controls.Add(this.txtPassword);
@@ -127,9 +127,9 @@
             this.Controls.Add(this.btnAll);
             this.Controls.Add(this.btnDate);
             this.Controls.Add(this.btnTime);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Text = "Cliente";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -144,7 +144,7 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label lblResul;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox chkModal;
+        private System.Windows.Forms.Button btnModal;
     }
 }
 

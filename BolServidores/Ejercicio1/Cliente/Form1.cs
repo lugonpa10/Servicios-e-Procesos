@@ -10,10 +10,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Cliente
 {
-    public partial class Form1 : Form
+    public partial class Form1 : Form//Tíyulo icono. Ip+puerto boón. Config ip+puerto. Una funciona para all, time date. ==
     {
         public Form1()
         {
@@ -55,27 +56,27 @@ namespace Cliente
             }
         }
 
-
-
-        private async void btnTime_Click(object sender, EventArgs e)
+        private async void envioDeComandos(object sender, EventArgs e)
         {
-            lblResul.Text = await comunicacionAsync("time");
+            if (sender == btnTime)
+            {
+                lblResul.Text = await comunicacionAsync("time");
 
+            }
+            else if (sender == btnAll)
+            {
+                lblResul.Text = await comunicacionAsync("all");
+
+            }
+            else
+            {
+                lblResul.Text = await comunicacionAsync("date");
+
+            }
         }
-
-        private async void btnAll_Click(object sender, EventArgs e)
-        {
-            lblResul.Text = await comunicacionAsync("all");
-        }
-
-        private async void btnDate_Click(object sender, EventArgs e)
-        {
-            lblResul.Text = await comunicacionAsync("date");
-        }
-
         private async void btnClose_Click(object sender, EventArgs e)
         {
-            if (txtPassword.Text.Equals(""))
+            if (txtPassword.Text == "")
             {
                 lblResul.Text = await comunicacionAsync("close");
             }
@@ -87,18 +88,37 @@ namespace Cliente
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+
+        private void button1_Click(object sender, EventArgs e)
         {
             Form2 f2 = new Form2();
-            if (chkModal.Checked)
+            f2.txtIp.Text = ip.ToString();
+            f2.txtPuerto.Text = puerto.ToString();
+            DialogResult res;
+            res = f2.ShowDialog();
+            if (res == DialogResult.Cancel)
             {
-                f2.txtIp.Text = ip.ToString();
-                f2.txtPuerto.Text = puerto.ToString();
-                f2.ShowDialog();
+                MessageBox.Show("No se han guardado los cambios", "Ip + Puerto",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            else if (res == DialogResult.OK)
+            {
+                try
+                {
+                    ip = IPAddress.Parse(f2.txtIp.Text);
+                    puerto = int.Parse(f2.txtPuerto.Text);
+                    MessageBox.Show("Cambios guardados correctamente", "Ip + Puerto",
+                   MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("La Ip o el puerto no son validos", "Ip + Puerto",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+               
+
+            }
         }
-
-
     }
 }
