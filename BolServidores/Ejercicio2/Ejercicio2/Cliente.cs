@@ -10,6 +10,8 @@ namespace Ejercicio2
     {
         private string nombreUsuario;
         private int ip;
+        private StreamWriter sw;
+
 
         public string NombreUsuario
         {
@@ -33,6 +35,25 @@ namespace Ejercicio2
             {
                 return ip;
             }
+        }
+
+        public StreamWriter Sw
+        {
+            set
+            {
+                sw = value;
+            }
+            get
+            {
+                return sw;
+            }
+        }
+
+        public Cliente(string nombreUsuario, int ip, StreamWriter sw)
+        {
+            NombreUsuario = nombreUsuario;
+            Ip = ip;
+            Sw = sw;
         }
     }
 }

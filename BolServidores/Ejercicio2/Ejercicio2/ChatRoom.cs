@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,13 +11,15 @@ namespace Ejercicio2
 {
     internal class ChatRoom
     {
-        public bool serverRunning = true;
+        public bool ServerRunning { set; get; } = true;
         public int Port { set; get; } = 31416;
         public int[] puertosAlternativos = { 135, 135, 135, 2324 };
         public bool puertoOcupado = true;
         private Socket s;
-        private int i;
-     
+        private int i = 0;
+        public List<Cliente> clientes = new List<Cliente>();
+        static object l = new object();
+
 
         public void initServer()
         {
@@ -28,10 +31,11 @@ namespace Ejercicio2
                 {
                     try
                     {
-                    puertoOcupado = false;
-                    s.Bind(ie);
+                        puertoOcupado = false;
+                        s.Bind(ie);
 
-                    }catch(SocketException e) when (e.ErrorCode == 10048)
+                    }
+                    catch (SocketException e) when (e.ErrorCode == 10048)
                     {
                         puertoOcupado = true;
                         ie.Port = puertosAlternativos[i];
@@ -40,12 +44,21 @@ namespace Ejercicio2
                 }
                 Console.WriteLine($"El puerto {ie.Port} esta libre");
                 s.Listen(10);
+                Console.WriteLine($"Se ha iniciado el servidor" + $" Escuchando en {ie.Address}:{ie.Port}");
+                while (ServerRunning)
+                {
+                    Socket client = s.Accept();
+                    Thread hilo = new Thread(() => ClientDispatcher(client));
+                    hilo.IsBackground = true;
+                    hilo.Start();
 
+                }
             }
             catch (IndexOutOfRangeException)
             {
                 Console.WriteLine("Puertos ocupados");
-            }catch(SocketException e) when (e.ErrorCode == 10048)
+            }
+            catch (SocketException e) when (e.ErrorCode == 10048)
             {
                 Console.WriteLine($"Puerto ");
             }
@@ -53,7 +66,59 @@ namespace Ejercicio2
             {
                 Console.WriteLine("Fin del servidor");
             }
+        }
 
+        private void ClientDispatcher(Socket sClient)
+        {
+            using (sClient)
+            {
+                IPEndPoint ie = (IPEndPoint)sClient.RemoteEndPoint;
+                Console.WriteLine($"Cliente conectado desde {ie.Address} en puerto {ie.Port}");
+
+                Encoding codificacion = Console.OutputEncoding;
+                using (NetworkStream ns = new NetworkStream(sClient))
+                using (StreamReader sr = new StreamReader(ns))
+                using (StreamWriter sw = new StreamWriter(ns))
+                {
+                    sw.AutoFlush = true;
+
+                    sw.WriteLine("Bienvenido al chat,introduce tu nombre de usuario");
+                    string nombreUsuario = sr.ReadLine();
+                    if (nombreUsuario != null)
+                    {
+                        sw.WriteLine($"Hola {nombreUsuario}");
+                    }
+                    else
+                    {
+                        sw.WriteLine("No se ha introducido ningun nombre");
+
+                    }
+                    string? msg = "";
+                    while (msg != null)
+                    {
+                        if (msg == "#exit")
+                        {
+
+                        }
+                        else if (msg == "#list")
+                        {
+
+                        }
+
+
+                    }
+
+                }
+            }
+
+
+        }
+
+        public void StopServer()
+        {
+            Console.WriteLine("Deteniendo servidor...");
+            ServerRunning = false;
+            s.Close();
 
         }
 
