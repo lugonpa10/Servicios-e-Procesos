@@ -14,11 +14,14 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Cliente
 {
-    public partial class Form1 : Form//Tíyulo icono. Ip+puerto boón. Config ip+puerto. Una funciona para all, time date. ==
+    public partial class Form1 : Form//   Una funciona para all, time date.  tABORDER. rANGO DE PUERTOS. overflow
     {
         public Form1()
         {
             InitializeComponent();
+            btnTime.Text = "time";
+            btnAll.Text = "all";
+            btnDate.Text = "date";
         }
         IPAddress ip = IPAddress.Parse("127.0.0.1");
         int puerto = 31416;
@@ -56,23 +59,9 @@ namespace Cliente
             }
         }
 
-        private async void envioDeComandos(object sender, EventArgs e)
+        private async void envioDeComandos(object sender, EventArgs e)//Usar  sender con text o tag (1 linea)
         {
-            if (sender == btnTime)
-            {
-                lblResul.Text = await comunicacionAsync("time");
-
-            }
-            else if (sender == btnAll)
-            {
-                lblResul.Text = await comunicacionAsync("all");
-
-            }
-            else
-            {
-                lblResul.Text = await comunicacionAsync("date");
-
-            }
+            lblResul.Text = await comunicacionAsync(((Button)sender).Text);
         }
         private async void btnClose_Click(object sender, EventArgs e)
         {
@@ -95,7 +84,9 @@ namespace Cliente
             f2.txtIp.Text = ip.ToString();
             f2.txtPuerto.Text = puerto.ToString();
             DialogResult res;
+            bool datosCorrectos = true;
             res = f2.ShowDialog();
+
             if (res == DialogResult.Cancel)
             {
                 MessageBox.Show("No se han guardado los cambios", "Ip + Puerto",
@@ -103,21 +94,34 @@ namespace Cliente
             }
             else if (res == DialogResult.OK)
             {
-                try
+                int puertoMaximo = IPEndPoint.MaxPort;
+
+                if (!IPAddress.TryParse(f2.txtIp.Text, out IPAddress ipValidar))
                 {
-                    ip = IPAddress.Parse(f2.txtIp.Text);
-                    puerto = int.Parse(f2.txtPuerto.Text);
-                    MessageBox.Show("Cambios guardados correctamente", "Ip + Puerto",
-                   MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("La IP no es valida", "Ip + Puerto",
+            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    datosCorrectos = false;
+                }
+                if (!int.TryParse(f2.txtPuerto.Text, out int puertoValidar))
+                {
+                    MessageBox.Show("El puerto no es valido", "Ip + Puerto",
+             MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    datosCorrectos = false;
 
                 }
-                catch (FormatException)
+                if (puertoValidar < 0 || puertoValidar > puertoMaximo)
                 {
-                    MessageBox.Show("La Ip o el puerto no son validos", "Ip + Puerto",
-                   MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-               
+                    MessageBox.Show("Fuera de rango", "Ip + Puerto",
+          MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    datosCorrectos = false;
 
+                }
+                if (datosCorrectos)
+                {
+                    ip = ipValidar;
+                    puerto = puertoValidar;
+
+                }
             }
         }
     }

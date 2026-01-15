@@ -54,7 +54,7 @@
             this.btnDate.Location = new System.Drawing.Point(68, 163);
             this.btnDate.Name = "btnDate";
             this.btnDate.Size = new System.Drawing.Size(75, 23);
-            this.btnDate.TabIndex = 1;
+            this.btnDate.TabIndex = 2;
             this.btnDate.Text = "date";
             this.btnDate.UseVisualStyleBackColor = true;
             this.btnDate.Click += new System.EventHandler(this.envioDeComandos);
@@ -64,7 +64,7 @@
             this.btnAll.Location = new System.Drawing.Point(68, 107);
             this.btnAll.Name = "btnAll";
             this.btnAll.Size = new System.Drawing.Size(75, 23);
-            this.btnAll.TabIndex = 2;
+            this.btnAll.TabIndex = 1;
             this.btnAll.Text = "all";
             this.btnAll.UseVisualStyleBackColor = true;
             this.btnAll.Click += new System.EventHandler(this.envioDeComandos);
@@ -89,10 +89,10 @@
             // lblResul
             // 
             this.lblResul.AutoSize = true;
-            this.lblResul.Location = new System.Drawing.Point(65, 220);
+            this.lblResul.Location = new System.Drawing.Point(277, 193);
             this.lblResul.Name = "lblResul";
             this.lblResul.Size = new System.Drawing.Size(115, 13);
-            this.lblResul.TabIndex = 5;
+            this.lblResul.TabIndex = 6;
             this.lblResul.Text = "Esperando Comando...";
             // 
             // label1
@@ -101,7 +101,7 @@
             this.label1.Location = new System.Drawing.Point(314, 41);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
-            this.label1.TabIndex = 6;
+            this.label1.TabIndex = 7;
             this.label1.Text = "Password";
             // 
             // btnModal
@@ -109,7 +109,7 @@
             this.btnModal.Location = new System.Drawing.Point(199, 107);
             this.btnModal.Name = "btnModal";
             this.btnModal.Size = new System.Drawing.Size(75, 23);
-            this.btnModal.TabIndex = 8;
+            this.btnModal.TabIndex = 5;
             this.btnModal.Text = "Ip + Puerto";
             this.btnModal.UseVisualStyleBackColor = true;
             this.btnModal.Click += new System.EventHandler(this.button1_Click);
