@@ -80,19 +80,34 @@ namespace Ejercicio2
                 using (StreamWriter sw = new StreamWriter(ns))
                 {
                     sw.AutoFlush = true;
-
-                    sw.WriteLine("Bienvenido al chat,introduce tu nombre de usuario");
-                    string nombreUsuario = sr.ReadLine().Trim();
-
+                    string nombreUsuario;
                     bool clienteConectado = true;
 
-                    sw.WriteLine($"Hola {nombreUsuario}, puedes empezar a chatear");
+                    sw.WriteLine("Bienvenido al chat,introduce tu nombre de usuario");
 
+                    nombreUsuario = sr.ReadLine();
 
-                    Cliente nuevoCliente = new Cliente(nombreUsuario, ie.Address, sw);
-                    lock (l)
+                    Cliente nuevoCliente;
+
+                    if (nombreUsuario == null)
                     {
-                        clientes.Add(nuevoCliente);
+                        sw.WriteLine("El Cliente se ha desconectado");
+                        clienteConectado = false;
+
+                    }
+                    else if (nombreUsuario == "" || nombreUsuario == " ")
+                    {
+                        sw.WriteLine("Nombre de usuario no valido");
+                        clienteConectado = false;
+                    }
+                    if (clienteConectado)
+                    {
+                        sw.WriteLine($"Hola {nombreUsuario},puedes empezar a chatear");
+                        nuevoCliente = new Cliente(nombreUsuario, ie.Address, sw);
+                        lock (l)
+                        {
+                            clientes.Add(nuevoCliente);
+                        }
                     }
                     string? msg = "";
                     while (msg != null && clienteConectado)
@@ -103,12 +118,6 @@ namespace Ejercicio2
                             switch (msg)
                             {
                                 case "#exit":
-                                    lock (l)
-                                    {
-                                        clientes.Remove(nuevoCliente);
-
-
-                                    }
                                     clienteConectado = false;
                                     break;
 
@@ -130,6 +139,14 @@ namespace Ejercicio2
 
                             }
 
+                            if (!clienteConectado && nombreUsuario != null)
+                            {
+                                lock (l)
+                                {
+                                    clientes.Remove(nuevoCliente);
+                                }
+                            }
+
                         }
                         catch (IOException)
                         {
@@ -137,13 +154,10 @@ namespace Ejercicio2
 
                         }
                     }
-
-
                     sw.WriteLine("Cliente desconectado");
 
                 }
             }
-
 
         }
 
