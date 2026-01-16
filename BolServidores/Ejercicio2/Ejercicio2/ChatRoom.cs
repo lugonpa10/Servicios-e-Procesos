@@ -49,7 +49,6 @@ namespace Ejercicio2
                 {
                     Socket client = s.Accept();
                     Thread hilo = new Thread(() => ClientDispatcher(client));
-                    hilo.IsBackground = true;
                     hilo.Start();
 
                 }
@@ -60,7 +59,7 @@ namespace Ejercicio2
             }
             catch (SocketException e) when (e.ErrorCode == 10048)
             {
-                Console.WriteLine($"Puerto ");
+                Console.WriteLine($"Puerto {Port} en uso ");
             }
             catch (SocketException)
             {
@@ -83,30 +82,64 @@ namespace Ejercicio2
                     sw.AutoFlush = true;
 
                     sw.WriteLine("Bienvenido al chat,introduce tu nombre de usuario");
-                    string nombreUsuario = sr.ReadLine();
-                    if (nombreUsuario != null)
-                    {
-                        sw.WriteLine($"Hola {nombreUsuario}");
-                    }
-                    else
-                    {
-                        sw.WriteLine("No se ha introducido ningun nombre");
+                    string nombreUsuario = sr.ReadLine().Trim();
 
+                    bool clienteConectado = true;
+
+                    sw.WriteLine($"Hola {nombreUsuario}, puedes empezar a chatear");
+
+
+                    Cliente nuevoCliente = new Cliente(nombreUsuario, ie.Address, sw);
+                    lock (l)
+                    {
+                        clientes.Add(nuevoCliente);
                     }
                     string? msg = "";
-                    while (msg != null)
+                    while (msg != null && clienteConectado)
                     {
-                        if (msg == "#exit")
+                        try
                         {
+                            msg = sr.ReadLine()?.Trim();
+                            switch (msg)
+                            {
+                                case "#exit":
+                                    lock (l)
+                                    {
+                                        clientes.Remove(nuevoCliente);
+
+
+                                    }
+                                    clienteConectado = false;
+                                    break;
+
+                                case "#list":
+                                    sw.WriteLine("Usuarios conectados: ");
+                                    lock (l)
+                                    {
+                                        foreach (Cliente c in clientes)
+                                        {
+                                            sw.WriteLine($"{c.NombreUsuario}");
+                                        }
+                                    }
+
+                                    break;
+
+                                default:
+
+                                    break;
+
+                            }
 
                         }
-                        else if (msg == "#list")
+                        catch (IOException)
                         {
+                            clienteConectado = false;
 
                         }
-
-
                     }
+
+
+                    sw.WriteLine("Cliente desconectado");
 
                 }
             }

@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            ChatRoom cr = new ChatRoom();
+            cr.initServer();
         }
     }
 }
