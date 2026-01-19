@@ -13,7 +13,7 @@ namespace Ejercicio2
     {
         public bool ServerRunning { set; get; } = true;
         public int Port { set; get; } = 31416;
-        public int[] puertosAlternativos = { 135, 135, 135, 2324 };
+        public int[] puertosAlternativos = { 135, 135, 135, 234 };
         public bool puertoOcupado = true;
         private Socket s;
         private int i = 0;
@@ -87,7 +87,7 @@ namespace Ejercicio2
 
                     nombreUsuario = sr.ReadLine();
 
-                    Cliente nuevoCliente;
+                    Cliente nuevoCliente = null;
 
                     if (nombreUsuario == null)
                     {
@@ -107,7 +107,9 @@ namespace Ejercicio2
                         lock (l)
                         {
                             clientes.Add(nuevoCliente);
+
                         }
+
                     }
                     string? msg = "";
                     while (msg != null && clienteConectado)
@@ -119,7 +121,15 @@ namespace Ejercicio2
                             {
                                 case "#exit":
                                     clienteConectado = false;
+                                    if (!clienteConectado && nombreUsuario != null)
+                                    {
+                                        lock (l)
+                                        {
+                                            clientes.Remove(nuevoCliente);
+                                        }
+                                    }
                                     break;
+
 
                                 case "#list":
                                     sw.WriteLine("Usuarios conectados: ");
@@ -134,18 +144,23 @@ namespace Ejercicio2
                                     break;
 
                                 default:
+                                    lock (l)
+                                    {
+                                        foreach (Cliente c in clientes)
+                                        {
+                                            if (c != nuevoCliente)
+                                            {
+                                                c.Sw.WriteLine($"{nuevoCliente.NombreUsuario}@{nuevoCliente.IP}: {msg}");
 
+                                            }
+
+                                        }
+                                    }
                                     break;
 
                             }
 
-                            if (!clienteConectado && nombreUsuario != null)
-                            {
-                                lock (l)
-                                {
-                                    clientes.Remove(nuevoCliente);
-                                }
-                            }
+
 
                         }
                         catch (IOException)
@@ -154,7 +169,6 @@ namespace Ejercicio2
 
                         }
                     }
-                    sw.WriteLine("Cliente desconectado");
 
                 }
             }
