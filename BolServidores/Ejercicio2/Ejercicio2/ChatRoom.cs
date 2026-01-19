@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -89,9 +90,10 @@ namespace Ejercicio2
 
                     Cliente nuevoCliente = null;
 
+
+
                     if (nombreUsuario == null)
                     {
-                        sw.WriteLine("El Cliente se ha desconectado");
                         clienteConectado = false;
 
                     }
@@ -109,7 +111,6 @@ namespace Ejercicio2
                             clientes.Add(nuevoCliente);
 
                         }
-
                     }
                     string? msg = "";
                     while (msg != null && clienteConectado)
@@ -121,13 +122,8 @@ namespace Ejercicio2
                             {
                                 case "#exit":
                                     clienteConectado = false;
-                                    if (!clienteConectado && nombreUsuario != null)
-                                    {
-                                        lock (l)
-                                        {
-                                            clientes.Remove(nuevoCliente);
-                                        }
-                                    }
+
+
                                     break;
 
 
@@ -146,19 +142,26 @@ namespace Ejercicio2
                                 default:
                                     lock (l)
                                     {
-                                        foreach (Cliente c in clientes)
+
+                                        for (int i = 0; i < clientes.Count; i++)
                                         {
-                                            if (c != nuevoCliente)
+                                            if (nuevoCliente.IP != ie.Address)
                                             {
-                                                c.Sw.WriteLine($"{nuevoCliente.NombreUsuario}@{nuevoCliente.IP}: {msg}");
-
+                                                clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario}@{nuevoCliente.IP}: {msg}");
                                             }
-
+                                            else
+                                            {
+                                                clientes.RemoveAt(i);
+                                                i--;
+                                            }
                                         }
+
+
                                     }
                                     break;
 
                             }
+
 
 
 
@@ -167,8 +170,13 @@ namespace Ejercicio2
                         {
                             clienteConectado = false;
 
+
+
                         }
+
                     }
+
+
 
                 }
             }
