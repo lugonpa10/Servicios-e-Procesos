@@ -108,7 +108,25 @@ namespace Ejercicio2
                         nuevoCliente = new Cliente(nombreUsuario, ie.Address, sw);
                         lock (l)
                         {
+
                             clientes.Add(nuevoCliente);
+                            for (int i = clientes.Count - 1; i >= 0; i--)
+                            {
+
+                                try
+                                {
+                                    if (clientes[i].Sw != nuevoCliente.Sw)
+                                    {
+                                        clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario} se ha conectado");
+                                    }
+
+                                }
+                                catch (ObjectDisposedException)
+                                {
+                                    clientes.Remove(nuevoCliente);
+                                }
+                            }
+
 
                         }
                     }
@@ -122,8 +140,25 @@ namespace Ejercicio2
                             {
                                 case "#exit":
                                     clienteConectado = false;
+                                    lock (l)
+                                    {
 
+                                        for (int i = clientes.Count - 1; i >= 0; i--)
+                                        {
+                                            try
+                                            {
+                                                if (clientes[i].Sw != nuevoCliente.Sw)
+                                                {
+                                                    clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario} se ha desconectado");
+                                                }
 
+                                            }
+                                            catch (ObjectDisposedException)
+                                            {
+                                                clientes.Remove(nuevoCliente);
+                                            }
+                                        }
+                                    }
                                     break;
 
 
@@ -142,17 +177,20 @@ namespace Ejercicio2
                                 default:
                                     lock (l)
                                     {
-
-                                        for (int i = 0; i < clientes.Count; i++)
+                                        for (int i = clientes.Count - 1; i >= 0; i--)
                                         {
-                                            if (nuevoCliente.IP != ie.Address)
+
+                                            try
                                             {
-                                                clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario}@{nuevoCliente.IP}: {msg}");
+                                                if (clientes[i].Sw != nuevoCliente.Sw)
+                                                {
+                                                    clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario}@{nuevoCliente.IP}:{msg}");
+                                                }
+
                                             }
-                                            else
+                                            catch (ObjectDisposedException)
                                             {
-                                                clientes.RemoveAt(i);
-                                                i--;
+                                                clientes.Remove(nuevoCliente);
                                             }
                                         }
 
@@ -161,16 +199,10 @@ namespace Ejercicio2
                                     break;
 
                             }
-
-
-
-
                         }
                         catch (IOException)
                         {
                             clienteConectado = false;
-
-
 
                         }
 
@@ -182,15 +214,6 @@ namespace Ejercicio2
             }
 
         }
-
-        public void StopServer()
-        {
-            Console.WriteLine("Deteniendo servidor...");
-            ServerRunning = false;
-            s.Close();
-
-        }
-
 
 
     }
