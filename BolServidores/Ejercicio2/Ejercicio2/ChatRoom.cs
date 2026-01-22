@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Ejercicio2
 {
-    internal class ChatRoom
+    internal class ChatRoom//Revisar uso de la colección
     {
         public bool ServerRunning { set; get; } = true;
         public int Port { set; get; } = 31416;
@@ -108,23 +108,15 @@ namespace Ejercicio2
                         nuevoCliente = new Cliente(nombreUsuario, ie.Address, sw);
                         lock (l)
                         {
-
                             clientes.Add(nuevoCliente);
-                            for (int i = clientes.Count - 1; i >= 0; i--)
+                            foreach (Cliente c in clientes)
                             {
-
-                                try
+                                if (c != nuevoCliente)
                                 {
-                                    if (clientes[i].Sw != nuevoCliente.Sw)
-                                    {
-                                        clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario} se ha conectado");
-                                    }
+                                    c.Sw.WriteLine($"{nuevoCliente.NombreUsuario} se ha conectado");
 
                                 }
-                                catch (ObjectDisposedException)
-                                {
-                                    clientes.Remove(nuevoCliente);
-                                }
+
                             }
 
 
@@ -143,21 +135,16 @@ namespace Ejercicio2
                                     lock (l)
                                     {
 
-                                        for (int i = clientes.Count - 1; i >= 0; i--)
+                                        foreach (Cliente c in clientes)
                                         {
-                                            try
+                                            if (c != nuevoCliente)
                                             {
-                                                if (clientes[i].Sw != nuevoCliente.Sw)
-                                                {
-                                                    clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario} se ha desconectado");
-                                                }
+                                                c.Sw.WriteLine($"{nuevoCliente.NombreUsuario} se ha desconectado");
 
                                             }
-                                            catch (ObjectDisposedException)
-                                            {
-                                                clientes.Remove(nuevoCliente);
-                                            }
+
                                         }
+                                        
                                     }
                                     break;
 
@@ -168,34 +155,15 @@ namespace Ejercicio2
                                     {
                                         foreach (Cliente c in clientes)
                                         {
-                                            sw.WriteLine($"{c.NombreUsuario}");
+                                            c.Sw.WriteLine($"{c.NombreUsuario}");
                                         }
                                     }
 
                                     break;
 
                                 default:
-                                    lock (l)
-                                    {
-                                        for (int i = clientes.Count - 1; i >= 0; i--)
-                                        {
-
-                                            try
-                                            {
-                                                if (clientes[i].Sw != nuevoCliente.Sw)
-                                                {
-                                                    clientes[i].Sw.WriteLine($"{nuevoCliente.NombreUsuario}@{nuevoCliente.IP}:{msg}");
-                                                }
-
-                                            }
-                                            catch (ObjectDisposedException)
-                                            {
-                                                clientes.Remove(nuevoCliente);
-                                            }
-                                        }
-
-
-                                    }
+                                    
+                                    
                                     break;
 
                             }
@@ -204,6 +172,10 @@ namespace Ejercicio2
                         {
                             clienteConectado = false;
 
+                        }
+                        lock (l)
+                        {
+                            clientes.Remove(nuevoCliente);
                         }
 
                     }
@@ -214,6 +186,8 @@ namespace Ejercicio2
             }
 
         }
+
+       
 
 
     }
