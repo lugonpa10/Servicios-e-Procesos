@@ -17,6 +17,7 @@ namespace Ejercicio3
         public int puertoReferencia = 1024;
         private Socket s;
         public bool puertoOcupado = true;
+        int puertoMax = IPEndPoint.MaxPort;
         public bool ServeRunning { set; get; } = true;
 
         public void ReadNames(string rutaArchivo)
@@ -24,11 +25,12 @@ namespace Ejercicio3
             try
             {
                 string linea = "";
-                using (StreamReader sr = new StreamReader(rutaArchivo)) // TODO varias lineas.
+                using (StreamReader sr = new StreamReader(rutaArchivo))
                 {
                     while ((linea = sr.ReadLine()) != null)
                     {
-                        users = linea.Split(";");
+                        users = sr.ReadToEnd().ToLower().Split(";");
+
 
                     }
                 }
@@ -52,7 +54,7 @@ namespace Ejercicio3
                 using (StreamReader sr = new StreamReader(rutaArchivo))
                 {
                     linea = sr.ReadLine();
-                    if (linea.Length != 4 || linea == null)
+                    if (linea == null || linea.Length != 4)
                     {
                         return -1;
 
@@ -98,18 +100,36 @@ namespace Ejercicio3
                     catch (SocketException e) when (e.ErrorCode == 10048)
                     {
                         puertoOcupado = true;
+
                         ie.Port = puertoReferencia;
+                        if (puertoReferencia > puertoMax)
+                        {
+                            Console.WriteLine("Todos los puertos están ocupados");
+                        }
+                        Port = puertoReferencia;
                         puertoReferencia++;
 
                     }
                 }
+                Console.WriteLine($"El puerto {ie.Port} esta libre");
 
-                Console.WriteLine($"El puerto {Port} esta a la escucha");
+                string userProfile = Environment.GetEnvironmentVariable("userprofile");
+                string archivo = "usuarios.txt";
+                string rutaArchivo = userProfile + "\\" + archivo;
+                ReadNames(rutaArchivo);
+
+
+
+
+                s.Listen(10);
                 while (ServeRunning)
                 {
+                    Socket client = s.Accept();
+                    Thread hilos = new Thread(() => ClientDispatcher(client));
+                    hilos.Start();
 
-                    
                 }
+
 
             }
             catch (SocketException e) when (e.ErrorCode == 10048)
@@ -121,9 +141,43 @@ namespace Ejercicio3
             {
                 Console.WriteLine("Fin del servidor");
             }
-           
+
 
         }
+
+
+        private void ClientDispatcher(Socket sClient)
+        {
+            using (sClient)
+            {
+                IPEndPoint ieClient = (IPEndPoint)sClient.RemoteEndPoint;
+                Console.WriteLine($"El cliente se conectó {ieClient.Address} en el puerto {Port}");
+                Encoding codificacion = Console.OutputEncoding;
+                using (NetworkStream ns = new NetworkStream(sClient))
+                using (StreamWriter sw = new StreamWriter(ns))
+                using (StreamReader sr = new StreamReader(ns))
+                {
+                    sw.AutoFlush = true;
+                    sw.WriteLine("Bienvenido al servidor,introduce tu nombre");
+                    string nombreUsuario = sr.ReadLine();
+                    while (nombreUsuario != null)
+                    {
+                        if (nombreUsuario == "admin")
+                        {
+                            string pin = sr.ReadLine().Trim();
+
+                        }
+
+                    }
+
+
+
+                }
+
+
+            }
+        }
+
 
     }
 }
