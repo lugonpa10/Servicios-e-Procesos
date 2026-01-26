@@ -19,6 +19,7 @@ namespace Ejercicio3
         public bool puertoOcupado = true;
         int puertoMax = IPEndPoint.MaxPort;
         public bool ServeRunning { set; get; } = true;
+        public bool clienteConectado = true;
 
         public void ReadNames(string rutaArchivo)
         {
@@ -32,10 +33,9 @@ namespace Ejercicio3
                         users = sr.ReadToEnd().ToLower().Split(";");
 
 
+
                     }
                 }
-
-
             }
             catch (IOException)
             {
@@ -72,8 +72,6 @@ namespace Ejercicio3
                             return pinNumeros;
 
                         }
-
-
                     }
                 }
             }
@@ -159,16 +157,45 @@ namespace Ejercicio3
                 {
                     sw.AutoFlush = true;
                     sw.WriteLine("Bienvenido al servidor,introduce tu nombre");
-                    string nombreUsuario = sr.ReadLine();
-                    while (nombreUsuario != null)
+                    string nombreUsuario = sr.ReadLine().Trim();
+                    if (nombreUsuario == null || (!users.Contains(nombreUsuario) || nombreUsuario != "admin"))
                     {
-                        if (nombreUsuario == "admin")
-                        {
-                            string pin = sr.ReadLine().Trim();
-
-                        }
+                        clienteConectado = false;
 
                     }
+                    else if (nombreUsuario != null && nombreUsuario == "admin")
+                    {
+                        string userProfile = Environment.GetEnvironmentVariable("userprofile");
+                        string archivo = "pin.txt";
+                        string rutaArchivo = userProfile + "\\" + archivo;
+                        int pinCorrecto = ReadPin(rutaArchivo);
+                        int pinUsuario = int.Parse(sr.ReadLine().Trim());
+
+                        if (pinCorrecto != pinUsuario)
+                        {
+                            clienteConectado = false;
+                        }
+                        else if (pinCorrecto == -1)
+                        {
+                            pinCorrecto = 1234;
+                        }
+                    }
+                    switch (nombreUsuario)
+                    {
+                        case "list":
+                            list(sw);
+
+                            break;
+
+                        case "add":
+                            add(nombreUsuario, sw);
+                            break;
+                    }
+
+
+
+
+
 
 
 
@@ -176,6 +203,54 @@ namespace Ejercicio3
 
 
             }
+        }
+
+        public void list(StreamWriter sw)
+        {
+            if (waitQueue.Count == 0)
+            {
+                sw.WriteLine("No hay nadie en la cola");
+            }
+            else
+            {
+                sw.WriteLine("Usuarios en la cola: ");
+                foreach (string nombres in waitQueue)
+                {
+                    sw.WriteLine(nombres);
+                }
+            }
+
+
+        }
+
+        public void add(string nombreUsuario, StreamWriter sw)
+        {
+            bool añadirUsuario = true;
+
+            foreach (string nombres in waitQueue)
+            {
+                string[] usuarioEnLista = nombres.Split("-");
+                if (nombreUsuario == usuarioEnLista[0])
+                {
+                    añadirUsuario = false;
+                }
+
+            }
+
+
+            if (añadirUsuario)
+            {
+                string fecha = DateTime.Now.ToString("d");
+                string hora = DateTime.Now.ToString("T");
+                string concatenacion = nombreUsuario + " - " + fecha + " " + hora;
+                waitQueue.Add(concatenacion);
+                sw.WriteLine("OK");
+
+            }
+
+
+
+
         }
 
 
