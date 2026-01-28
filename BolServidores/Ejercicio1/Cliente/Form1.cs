@@ -14,7 +14,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Cliente
 {
-    public partial class Form1 : Form//      tABORDER.  
+    public partial class Form1 : Form
     {
         public Form1()
         {
@@ -59,7 +59,7 @@ namespace Cliente
             }
         }
 
-        private async void envioDeComandos(object sender, EventArgs e) 
+        private async void envioDeComandos(object sender, EventArgs e)
         {
             lblResul.Text = await comunicacionAsync(((Button)sender).Text);
         }
