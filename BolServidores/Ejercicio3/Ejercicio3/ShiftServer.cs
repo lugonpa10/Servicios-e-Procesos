@@ -155,49 +155,133 @@ namespace Ejercicio3
                 using (StreamWriter sw = new StreamWriter(ns))
                 using (StreamReader sr = new StreamReader(ns))
                 {
-                    sw.AutoFlush = true;
-                    sw.WriteLine("Bienvenido al servidor,introduce tu nombre");
-                    string nombreUsuario = sr.ReadLine().Trim();
-                    if (nombreUsuario == null || (!users.Contains(nombreUsuario) || nombreUsuario != "admin"))
+                    try
                     {
-                        clienteConectado = false;
-
-                    }
-                    else if (nombreUsuario != null && nombreUsuario == "admin")
-                    {
-                        string userProfile = Environment.GetEnvironmentVariable("userprofile");
-                        string archivo = "pin.txt";
-                        string rutaArchivo = userProfile + "\\" + archivo;
-                        int pinCorrecto = ReadPin(rutaArchivo);
-                        int pinUsuario = int.Parse(sr.ReadLine().Trim());
-
-                        if (pinCorrecto != pinUsuario)
+                        sw.AutoFlush = true;
+                        sw.WriteLine("Bienvenido al servidor,introduce tu nombre");
+                        string nombreUsuario = sr.ReadLine().Trim();
+                        if (nombreUsuario == null || (!users.Contains(nombreUsuario) || nombreUsuario != "admin"))
                         {
                             clienteConectado = false;
+
                         }
-                        else if (pinCorrecto == -1)
+                        else if (nombreUsuario != null && users.Contains(nombreUsuario))
                         {
-                            pinCorrecto = 1234;
+                            string comando = sr.ReadLine().Trim();
+
+                            switch (comando)
+                            {
+                                case "list":
+                                    list(sw);
+
+                                    break;
+
+                                case "add":
+                                    add(nombreUsuario, sw);
+                                    break;
+                            }
+
+
                         }
+                        else if (nombreUsuario != null && nombreUsuario == "admin")
+                        {
+                            string comando;
+                            int pinCorrecto;
+                            string userprofile = Environment.GetEnvironmentVariable("userprofile");
+                            string archivo = "pin.txt";
+                            string rutaArchivo = userprofile + "\\" + archivo;
+                            try
+                            {
+                                pinCorrecto = ReadPin(rutaArchivo);
+
+                            }
+                            catch (UnauthorizedAccessException)
+                            {
+                                pinCorrecto = 1234;
+                            }
+                            catch (FileNotFoundException)
+                            {
+                                pinCorrecto = 1234;
+                            }
+                            catch (IOException)
+                            {
+                                pinCorrecto = 1234;
+                            }
+
+
+
+                            sw.WriteLine("Introduce el pin para poder continuar");
+                            int pinUsuario = int.Parse(sr.ReadLine().Trim());
+                            if (pinCorrecto != pinUsuario)
+                            {
+                                clienteConectado = false;
+                            }
+
+                            else
+                            {
+                                comando = sr.ReadLine().Trim();
+
+                                if (comando.StartsWith("del "))
+                                {
+                                    string[] partes = comando.Split(" ");
+                                    if (partes.Length != 2 || !int.TryParse(partes[1], out int pos) || pos < 0 || pos >= waitQueue.Count)
+                                    {
+                                        sw.WriteLine("delete error");
+
+                                    }
+                                    else
+                                    {
+                                        waitQueue.RemoveAt(pos);
+                                        sw.WriteLine($"Se ha eliminado al usuario de la posicion {pos}");
+                                    }
+
+
+                                }
+                                else if (comando.StartsWith("chpin "))
+                                {
+                                    string[] partes = comando.Split(" ");
+                                    if ((partes.Length != 2 || !int.TryParse(partes[1], out int pin) || partes[1].Length != 4))
+                                    {
+
+                                        sw.WriteLine("Ocurrió un error intentando guardar el pin");
+
+                                    }
+                                    else
+                                    {
+                                        userprofile = Environment.GetEnvironmentVariable("userprofile");
+                                        archivo = "pin.txt";
+                                        rutaArchivo = userprofile + "\\" + archivo;
+                                        using (StreamWriter sw2 = new StreamWriter(rutaArchivo))
+                                        {
+                                            sw2.WriteLine(pin);
+                                        }
+                                    }
+                                }
+                                switch (comando)
+                                {
+                                    case "list":
+                                        list(sw);
+                                        break;
+
+                                    case "add":
+                                        add(nombreUsuario, sw);
+                                        break;
+
+                                    case "exit":
+                                        break;
+
+                                    case "shutdown":
+                                        break;
+                                }
+                            }
+
+                        }
+
                     }
-                    switch (nombreUsuario)
+                    catch (IOException)
                     {
-                        case "list":
-                            list(sw);
-
-                            break;
-
-                        case "add":
-                            add(nombreUsuario, sw);
-                            break;
+                        clienteConectado = false;
                     }
-
-
-
-
-
-
-
 
                 }
 
@@ -237,12 +321,11 @@ namespace Ejercicio3
 
             }
 
-
             if (añadirUsuario)
             {
                 string fecha = DateTime.Now.ToString("d");
                 string hora = DateTime.Now.ToString("T");
-                string concatenacion = nombreUsuario + " - " + fecha + " " + hora;
+                string concatenacion = nombreUsuario + "-" + fecha + " " + hora;
                 waitQueue.Add(concatenacion);
                 sw.WriteLine("OK");
 

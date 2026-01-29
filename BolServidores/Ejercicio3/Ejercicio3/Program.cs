@@ -5,6 +5,7 @@
         static void Main(string[] args)
         {
             ShiftServer shiftServer = new ShiftServer();
+            shiftServer.Init();
             
         }
     }
