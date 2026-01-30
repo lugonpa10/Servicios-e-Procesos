@@ -14,7 +14,7 @@ namespace Ejercicio3
         public string[] users;
         public List<string> waitQueue = new List<string>();
         public int Port { set; get; } = 31416;
-        public int puertoReferencia = 1024;
+        public int puertoReferencia = 135;
         private Socket s;
         public bool puertoOcupado = true;
         int puertoMax = IPEndPoint.MaxPort;
@@ -25,17 +25,18 @@ namespace Ejercicio3
         {
             try
             {
-                string linea = "";
+                string contenido = "";
                 using (StreamReader sr = new StreamReader(rutaArchivo))
                 {
+                    string linea = "";
                     while ((linea = sr.ReadLine()) != null)
                     {
-                        users = sr.ReadToEnd().ToLower().Split(";");
-
+                        contenido += linea;
 
 
                     }
                 }
+                users = contenido.ToLower().Split(";");
             }
             catch (IOException)
             {
@@ -116,9 +117,6 @@ namespace Ejercicio3
                 string rutaArchivo = userProfile + "\\" + archivo;
                 ReadNames(rutaArchivo);
 
-
-
-
                 s.Listen(10);
                 while (ServeRunning)
                 {
@@ -159,15 +157,17 @@ namespace Ejercicio3
                     {
                         sw.AutoFlush = true;
                         sw.WriteLine("Bienvenido al servidor,introduce tu nombre");
-                        string nombreUsuario = sr.ReadLine().Trim();
-                        if (nombreUsuario == null || (!users.Contains(nombreUsuario) || nombreUsuario != "admin"))
+                        string nombreUsuario = sr.ReadLine()?.Trim();
+                        if (nombreUsuario == null || (!users.Contains(nombreUsuario) && nombreUsuario != "admin"))
                         {
                             clienteConectado = false;
 
                         }
                         else if (nombreUsuario != null && users.Contains(nombreUsuario))
                         {
-                            string comando = sr.ReadLine().Trim();
+
+                            sw.WriteLine($"Hola {nombreUsuario}, introduce un comando");
+                            string comando = sr.ReadLine()?.Trim();
 
                             switch (comando)
                             {
@@ -177,7 +177,7 @@ namespace Ejercicio3
                                     break;
 
                                 case "add":
-                                    add(nombreUsuario, sw);
+                                    add(nombreUsuario, sw, sr);
                                     break;
                             }
 
@@ -185,7 +185,8 @@ namespace Ejercicio3
                         }
                         else if (nombreUsuario != null && nombreUsuario == "admin")
                         {
-                            string comando;
+                            string? comando = "";
+                            string otroComando = "";
                             int pinCorrecto;
                             string userprofile = Environment.GetEnvironmentVariable("userprofile");
                             string archivo = "pin.txt";
@@ -211,68 +212,115 @@ namespace Ejercicio3
 
 
                             sw.WriteLine("Introduce el pin para poder continuar");
-                            int pinUsuario = int.Parse(sr.ReadLine().Trim());
-                            if (pinCorrecto != pinUsuario)
+                            string entrada = sr.ReadLine().Trim();
+
+                            if (!int.TryParse(entrada, out int pinUsuario))
                             {
+                                sw.WriteLine("El formato de pin no es valido");
+                                clienteConectado = false;
+
+                            }
+                            else if (pinCorrecto != pinUsuario)
+                            {
+                                sw.WriteLine("Contrasenha incorrecta");
                                 clienteConectado = false;
                             }
 
                             else
                             {
-                                comando = sr.ReadLine().Trim();
+                                sw.WriteLine("Introduce un comando");
+                                comando = sr.ReadLine()?.Trim();
 
-                                if (comando.StartsWith("del "))
+                                while (comando != null && clienteConectado)
                                 {
-                                    string[] partes = comando.Split(" ");
-                                    if (partes.Length != 2 || !int.TryParse(partes[1], out int pos) || pos < 0 || pos >= waitQueue.Count)
+
+                                    if (comando.StartsWith("del "))
                                     {
-                                        sw.WriteLine("delete error");
-
-                                    }
-                                    else
-                                    {
-                                        waitQueue.RemoveAt(pos);
-                                        sw.WriteLine($"Se ha eliminado al usuario de la posicion {pos}");
-                                    }
-
-
-                                }
-                                else if (comando.StartsWith("chpin "))
-                                {
-                                    string[] partes = comando.Split(" ");
-                                    if ((partes.Length != 2 || !int.TryParse(partes[1], out int pin) || partes[1].Length != 4))
-                                    {
-
-                                        sw.WriteLine("Ocurrió un error intentando guardar el pin");
-
-                                    }
-                                    else
-                                    {
-                                        userprofile = Environment.GetEnvironmentVariable("userprofile");
-                                        archivo = "pin.txt";
-                                        rutaArchivo = userprofile + "\\" + archivo;
-                                        using (StreamWriter sw2 = new StreamWriter(rutaArchivo))
+                                        string[] partes = comando.Split(" ");
+                                        if (partes.Length != 2 || !int.TryParse(partes[1], out int pos) || pos < 0 || pos >= waitQueue.Count)
                                         {
-                                            sw2.WriteLine(pin);
+                                            sw.WriteLine("delete error");
+
+                                        }
+                                        else
+                                        {
+                                            waitQueue.RemoveAt(pos);
+                                            sw.WriteLine($"Se ha eliminado al usuario de la posicion {pos}");
+                                        }
+
+
+                                    }
+                                    else if (comando.StartsWith("chpin "))
+                                    {
+                                        string[] partes = comando.Split(" ");
+                                        if ((partes.Length != 2 || !int.TryParse(partes[1], out int pin) || partes[1].Length != 4))
+                                        {
+
+                                            sw.WriteLine("Ocurrió un error intentando guardar el pin");
+
+                                        }
+                                        else
+                                        {
+                                            try
+                                            {
+                                                userprofile = Environment.GetEnvironmentVariable("userprofile");
+                                                archivo = "pin.txt";
+                                                rutaArchivo = userprofile + "\\" + archivo;
+                                                using (StreamWriter sw2 = new StreamWriter(rutaArchivo))
+                                                {
+                                                    sw2.WriteLine(pin);
+                                                }
+                                                sw.WriteLine("Se ha guardado el pin correctamente");
+                                            }
+                                            catch (FileNotFoundException)
+                                            {
+                                                sw.WriteLine("No se encontro el archivo");
+                                            }
+                                            catch (IOException)
+                                            {
+                                                sw.WriteLine("Ocurrio un error con el archivo");
+
+                                            }
                                         }
                                     }
+                                    switch (comando)
+                                    {
+                                        case "list":
+                                            list(sw);
+                                            break;
+
+                                        case "add":
+                                            add(nombreUsuario, sw, sr);
+                                            break;
+
+                                        case "exit":
+                                            sw.WriteLine("Saliendo del servidor...");
+                                            clienteConectado = false;
+                                            break;
+
+                                        case "shutdown":
+                                            sw.WriteLine("hola");
+                                            stopServer();
+
+                                            break;
+                                    }
+
+                                    if (clienteConectado)
+                                    {
+                                        sw.WriteLine("Introduce otro comando");
+                                        otroComando = sr.ReadLine();
+                                    }
+                                    if (otroComando == null)
+                                    {
+                                        clienteConectado = false;
+                                    }
+                                    else
+                                    {
+                                        comando = otroComando;
+                                    }
+
                                 }
-                                switch (comando)
-                                {
-                                    case "list":
-                                        list(sw);
-                                        break;
 
-                                    case "add":
-                                        add(nombreUsuario, sw);
-                                        break;
-
-                                    case "exit":
-                                        break;
-
-                                    case "shutdown":
-                                        break;
-                                }
                             }
 
                         }
@@ -307,7 +355,7 @@ namespace Ejercicio3
 
         }
 
-        public void add(string nombreUsuario, StreamWriter sw)
+        public void add(string nombreUsuario, StreamWriter sw, StreamReader sr)
         {
             bool añadirUsuario = true;
 
@@ -323,6 +371,8 @@ namespace Ejercicio3
 
             if (añadirUsuario)
             {
+                sw.WriteLine("Dime el nombre del usuario para sumarlo a la lista");
+                nombreUsuario = sr.ReadLine().Trim();
                 string fecha = DateTime.Now.ToString("d");
                 string hora = DateTime.Now.ToString("T");
                 string concatenacion = nombreUsuario + "-" + fecha + " " + hora;
@@ -333,6 +383,14 @@ namespace Ejercicio3
 
 
 
+
+        }
+
+        public void stopServer()
+        {
+            Console.WriteLine("Deteniendo el servidor");
+            ServeRunning = false;
+            s.Close();
 
         }
 
