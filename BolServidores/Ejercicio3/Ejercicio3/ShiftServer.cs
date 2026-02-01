@@ -117,6 +117,25 @@ namespace Ejercicio3
                 string rutaArchivo = userProfile + "\\" + archivo;
                 ReadNames(rutaArchivo);
 
+                string archivoCola = "waitqueue.txt";
+                try
+                {
+                    string linea = "";
+                    using (StreamReader sr4 = new StreamReader(archivoCola))
+                    {
+                        while ((linea = sr4.ReadLine()) != null)
+                        {
+                            waitQueue.Add(linea);
+                        }
+                    }
+                    
+                }
+                catch (IOException)
+                {
+                    Console.WriteLine("Error con el archivo");
+                }
+
+
                 s.Listen(10);
                 while (ServeRunning)
                 {
@@ -234,55 +253,7 @@ namespace Ejercicio3
                                 while (comando != null && clienteConectado)
                                 {
 
-                                    if (comando.StartsWith("del "))
-                                    {
-                                        string[] partes = comando.Split(" ");
-                                        if (partes.Length != 2 || !int.TryParse(partes[1], out int pos) || pos < 0 || pos >= waitQueue.Count)
-                                        {
-                                            sw.WriteLine("delete error");
 
-                                        }
-                                        else
-                                        {
-                                            waitQueue.RemoveAt(pos);
-                                            sw.WriteLine($"Se ha eliminado al usuario de la posicion {pos}");
-                                        }
-
-
-                                    }
-                                    else if (comando.StartsWith("chpin "))
-                                    {
-                                        string[] partes = comando.Split(" ");
-                                        if ((partes.Length != 2 || !int.TryParse(partes[1], out int pin) || partes[1].Length != 4))
-                                        {
-
-                                            sw.WriteLine("Ocurrió un error intentando guardar el pin");
-
-                                        }
-                                        else
-                                        {
-                                            try
-                                            {
-                                                userprofile = Environment.GetEnvironmentVariable("userprofile");
-                                                archivo = "pin.txt";
-                                                rutaArchivo = userprofile + "\\" + archivo;
-                                                using (StreamWriter sw2 = new StreamWriter(rutaArchivo))
-                                                {
-                                                    sw2.WriteLine(pin);
-                                                }
-                                                sw.WriteLine("Se ha guardado el pin correctamente");
-                                            }
-                                            catch (FileNotFoundException)
-                                            {
-                                                sw.WriteLine("No se encontro el archivo");
-                                            }
-                                            catch (IOException)
-                                            {
-                                                sw.WriteLine("Ocurrio un error con el archivo");
-
-                                            }
-                                        }
-                                    }
                                     switch (comando)
                                     {
                                         case "list":
@@ -299,10 +270,82 @@ namespace Ejercicio3
                                             break;
 
                                         case "shutdown":
-                                            sw.WriteLine("hola");
+                                            clienteConectado = false;
+                                            string archivoCola = "waitqueue.txt";
+                                            try
+                                            {
+                                                using (StreamWriter sw3 = new StreamWriter(archivoCola))
+                                                {
+                                                    foreach (string nombre in waitQueue)
+                                                    {
+                                                        sw3.WriteLine(nombre);
+                                                    }
+                                                }
+                                                sw.WriteLine("Archivo guardado correctamente");
+                                            }
+                                            catch (IOException)
+                                            {
+                                                sw.WriteLine("Ocurrio un error con el archivo");
+                                            }
+
+
                                             stopServer();
 
                                             break;
+                                        default:
+
+                                            if (comando.StartsWith("del "))
+                                            {
+                                                string[] partes = comando.Split(" ");
+                                                if (partes.Length != 2 || !int.TryParse(partes[1], out int pos) || pos < 0 || pos >= waitQueue.Count)
+                                                {
+                                                    sw.WriteLine("delete error");
+
+                                                }
+                                                else
+                                                {
+                                                    waitQueue.RemoveAt(pos);
+                                                    sw.WriteLine($"Se ha eliminado al usuario de la posicion {pos}");
+                                                }
+
+
+                                            }
+                                            else if (comando.StartsWith("chpin "))
+                                            {
+                                                string[] partes = comando.Split(" ");
+                                                if ((partes.Length != 2 || !int.TryParse(partes[1], out int pin) || partes[1].Length != 4))
+                                                {
+
+                                                    sw.WriteLine("Ocurrió un error intentando guardar el pin");
+
+                                                }
+                                                else
+                                                {
+                                                    try
+                                                    {
+                                                        using (StreamWriter sw2 = new StreamWriter(rutaArchivo))
+                                                        {
+                                                            sw2.WriteLine(pin);
+                                                        }
+                                                        sw.WriteLine("Se ha guardado el pin correctamente");
+                                                    }
+                                                    catch (FileNotFoundException)
+                                                    {
+                                                        sw.WriteLine("No se encontro el archivo");
+                                                    }
+                                                    catch (IOException)
+                                                    {
+                                                        sw.WriteLine("Ocurrio un error con el archivo");
+
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                sw.WriteLine("Comando no valido");
+                                            }
+                                            break;
+
                                     }
 
                                     if (clienteConectado)
@@ -357,6 +400,8 @@ namespace Ejercicio3
 
         public void add(string nombreUsuario, StreamWriter sw, StreamReader sr)
         {
+            sw.WriteLine("Dime el nombre del usuario para sumarlo a la lista");
+            nombreUsuario = sr.ReadLine().Trim();
             bool añadirUsuario = true;
 
             foreach (string nombres in waitQueue)
@@ -371,14 +416,16 @@ namespace Ejercicio3
 
             if (añadirUsuario)
             {
-                sw.WriteLine("Dime el nombre del usuario para sumarlo a la lista");
-                nombreUsuario = sr.ReadLine().Trim();
                 string fecha = DateTime.Now.ToString("d");
                 string hora = DateTime.Now.ToString("T");
                 string concatenacion = nombreUsuario + "-" + fecha + " " + hora;
                 waitQueue.Add(concatenacion);
                 sw.WriteLine("OK");
 
+            }
+            else
+            {
+                sw.WriteLine($"{nombreUsuario} ya esta en la cola");
             }
 
 
