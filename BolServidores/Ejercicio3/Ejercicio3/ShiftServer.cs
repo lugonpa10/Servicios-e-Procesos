@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Ejercicio3
 {
-    internal class ShiftServer
+    internal class ShiftServer//Rango con if. Locks. Add añade al propio usuariuo (no pide nombre)
     {
         public string[] users;
         public List<string> waitQueue = new List<string>();
-        public int Port { set; get; } = 31416;
+        public int Port { set; get; } = 70000;
         public int puertoReferencia = 135;
         private Socket s;
         public bool puertoOcupado = true;
@@ -98,17 +98,18 @@ namespace Ejercicio3
                     }
                     catch (SocketException e) when (e.ErrorCode == 10048)
                     {
-                        puertoOcupado = true;
 
-                        ie.Port = puertoReferencia;
                         if (puertoReferencia > puertoMax)
                         {
-                            Console.WriteLine("Todos los puertos están ocupados");
+                            Console.WriteLine("El puerto de referencia no puede ser mayor que 65535");
                         }
+                        puertoOcupado = true;
+                        ie.Port = puertoReferencia;
                         Port = puertoReferencia;
                         puertoReferencia++;
 
                     }
+
                 }
                 Console.WriteLine($"El puerto {ie.Port} esta libre");
 
@@ -140,11 +141,11 @@ namespace Ejercicio3
                 }
                 catch (FileNotFoundException e)
                 {
-                    Console.WriteLine($"No se enmcontro el archivo{e}");
+                    Console.WriteLine($"No se encontro el archivo: {e}");
                 }
-                catch (IOException)
+                catch (IOException e)
                 {
-                    Console.WriteLine("Error con el archivo");
+                    Console.WriteLine($"Error con el archivo: {e}");
                 }
 
 
@@ -168,6 +169,7 @@ namespace Ejercicio3
             {
                 Console.WriteLine("Fin del servidor");
             }
+
 
 
         }
@@ -299,7 +301,9 @@ namespace Ejercicio3
                                             if (comando.StartsWith("del "))
                                             {
                                                 string[] partes = comando.Split(" ");
-                                                if (partes.Length != 2 || !int.TryParse(partes[1], out int pos) || pos < 0 || pos >= waitQueue.Count)
+                                                if (partes.Length != 2
+                                                    || !int.TryParse(partes[1], out int pos)
+                                                    || pos < 0 || pos >= waitQueue.Count)
                                                 {
                                                     sw.WriteLine("delete error");
 
@@ -331,13 +335,13 @@ namespace Ejercicio3
                                                         }
                                                         sw.WriteLine("Se ha guardado el pin correctamente");
                                                     }
-                                                    catch (FileNotFoundException)
+                                                    catch (FileNotFoundException e)
                                                     {
-                                                        sw.WriteLine("No se encontro el archivo");
+                                                        sw.WriteLine($"No se encontro el archivo: {e}");
                                                     }
-                                                    catch (IOException)
+                                                    catch (IOException e)
                                                     {
-                                                        sw.WriteLine("Ocurrio un error con el archivo");
+                                                        sw.WriteLine($"Ocurrio un error con el archivo: {e}");
 
                                                     }
                                                 }
@@ -402,8 +406,7 @@ namespace Ejercicio3
 
         public void add(string nombreUsuario, StreamWriter sw, StreamReader sr)
         {
-            sw.WriteLine("Dime el nombre del usuario para sumarlo a la lista");
-            nombreUsuario = sr.ReadLine().Trim();
+
             bool añadirUsuario = true;
 
             foreach (string nombres in waitQueue)
