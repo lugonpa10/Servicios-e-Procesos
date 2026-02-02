@@ -19,7 +19,6 @@ namespace Ejercicio3
         public bool puertoOcupado = true;
         int puertoMax = IPEndPoint.MaxPort;
         public bool ServeRunning { set; get; } = true;
-        public bool clienteConectado = true;
 
         public void ReadNames(string rutaArchivo)
         {
@@ -31,6 +30,7 @@ namespace Ejercicio3
                     string linea = "";
                     while ((linea = sr.ReadLine()) != null)
                     {
+                        linea = linea.Trim();
                         contenido += linea;
 
 
@@ -118,17 +118,29 @@ namespace Ejercicio3
                 ReadNames(rutaArchivo);
 
                 string archivoCola = "waitqueue.txt";
+                string rutaCola = userProfile + "\\" + archivoCola;
+
                 try
                 {
                     string linea = "";
-                    using (StreamReader sr4 = new StreamReader(archivoCola))
+                    using (StreamReader sr4 = new StreamReader(rutaCola))
                     {
+                        linea = linea.Trim();
+
                         while ((linea = sr4.ReadLine()) != null)
                         {
-                            waitQueue.Add(linea);
+                            if (linea.Length > 0)
+                            {
+                                waitQueue.Add(linea);
+
+                            }
                         }
                     }
-                    
+
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine($"No se enmcontro el archivo{e}");
                 }
                 catch (IOException)
                 {
@@ -163,6 +175,8 @@ namespace Ejercicio3
 
         private void ClientDispatcher(Socket sClient)
         {
+            bool clienteConectado = true;
+
             using (sClient)
             {
                 IPEndPoint ieClient = (IPEndPoint)sClient.RemoteEndPoint;
@@ -179,7 +193,9 @@ namespace Ejercicio3
                         string nombreUsuario = sr.ReadLine()?.Trim();
                         if (nombreUsuario == null || (!users.Contains(nombreUsuario) && nombreUsuario != "admin"))
                         {
+                            sw.WriteLine("El nombre no es valido");
                             clienteConectado = false;
+
 
                         }
                         else if (nombreUsuario != null && users.Contains(nombreUsuario))
@@ -197,6 +213,9 @@ namespace Ejercicio3
 
                                 case "add":
                                     add(nombreUsuario, sw, sr);
+                                    break;
+                                default:
+                                    sw.WriteLine("Comando no valido");
                                     break;
                             }
 
@@ -231,7 +250,7 @@ namespace Ejercicio3
 
 
                             sw.WriteLine("Introduce el pin para poder continuar");
-                            string entrada = sr.ReadLine().Trim();
+                            string entrada = sr.ReadLine()?.Trim();
 
                             if (!int.TryParse(entrada, out int pinUsuario))
                             {
@@ -270,25 +289,8 @@ namespace Ejercicio3
                                             break;
 
                                         case "shutdown":
+
                                             clienteConectado = false;
-                                            string archivoCola = "waitqueue.txt";
-                                            try
-                                            {
-                                                using (StreamWriter sw3 = new StreamWriter(archivoCola))
-                                                {
-                                                    foreach (string nombre in waitQueue)
-                                                    {
-                                                        sw3.WriteLine(nombre);
-                                                    }
-                                                }
-                                                sw.WriteLine("Archivo guardado correctamente");
-                                            }
-                                            catch (IOException)
-                                            {
-                                                sw.WriteLine("Ocurrio un error con el archivo");
-                                            }
-
-
                                             stopServer();
 
                                             break;
@@ -351,7 +353,7 @@ namespace Ejercicio3
                                     if (clienteConectado)
                                     {
                                         sw.WriteLine("Introduce otro comando");
-                                        otroComando = sr.ReadLine();
+                                        otroComando = sr.ReadLine()?.Trim();
                                     }
                                     if (otroComando == null)
                                     {
@@ -435,7 +437,27 @@ namespace Ejercicio3
 
         public void stopServer()
         {
+
             Console.WriteLine("Deteniendo el servidor");
+            string userProfile = Environment.GetEnvironmentVariable("userprofile");
+            string archivoCola = "waitqueue.txt";
+            string rutaCola = userProfile + "\\" + archivoCola;
+            try
+            {
+
+                using (StreamWriter sw3 = new StreamWriter(rutaCola))
+                {
+                    foreach (string nombre in waitQueue)
+                    {
+                        sw3.WriteLine(nombre);
+                    }
+                }
+
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Ocurrio un error con el archivo");
+            }
             ServeRunning = false;
             s.Close();
 
