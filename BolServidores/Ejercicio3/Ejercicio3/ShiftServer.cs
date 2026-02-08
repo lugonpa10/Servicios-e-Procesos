@@ -13,12 +13,13 @@ namespace Ejercicio3
     {
         public string[] users;
         public List<string> waitQueue = new List<string>();
-        public int Port { set; get; } = 70000;
-        public int puertoReferencia = 135;
+        public int Port { set; get; } = 31416;
+        public int puertoReferencia = 1024;
         private Socket s;
         public bool puertoOcupado = true;
         int puertoMax = IPEndPoint.MaxPort;
         public bool ServeRunning { set; get; } = true;
+        static object l = new object();
 
         public void ReadNames(string rutaArchivo)
         {
@@ -130,9 +131,14 @@ namespace Ejercicio3
 
                         while ((linea = sr4.ReadLine()) != null)
                         {
-                            if (linea.Length > 0)
+                            lock (l)
                             {
-                                waitQueue.Add(linea);
+                                if (linea.Length > 0)
+                                {
+
+                                    waitQueue.Add(linea);
+
+                                }
 
                             }
                         }
@@ -310,7 +316,11 @@ namespace Ejercicio3
                                                 }
                                                 else
                                                 {
-                                                    waitQueue.RemoveAt(pos);
+                                                    lock (l)
+                                                    {
+                                                        waitQueue.RemoveAt(pos);
+
+                                                    }
                                                     sw.WriteLine($"Se ha eliminado al usuario de la posicion {pos}");
                                                 }
 
@@ -388,17 +398,21 @@ namespace Ejercicio3
 
         public void list(StreamWriter sw)
         {
-            if (waitQueue.Count == 0)
+            lock (l)
             {
-                sw.WriteLine("No hay nadie en la cola");
-            }
-            else
-            {
-                sw.WriteLine("Usuarios en la cola: ");
-                foreach (string nombres in waitQueue)
+                if (waitQueue.Count == 0)
                 {
-                    sw.WriteLine(nombres);
+                    sw.WriteLine("No hay nadie en la cola");
                 }
+                else
+                {
+                    sw.WriteLine("Usuarios en la cola: ");
+                    foreach (string nombres in waitQueue)
+                    {
+                        sw.WriteLine(nombres);
+                    }
+                }
+
             }
 
 
@@ -407,31 +421,35 @@ namespace Ejercicio3
         public void add(string nombreUsuario, StreamWriter sw, StreamReader sr)
         {
 
-            bool añadirUsuario = true;
-
-            foreach (string nombres in waitQueue)
+            lock (l)
             {
-                string[] usuarioEnLista = nombres.Split("-");
-                if (nombreUsuario == usuarioEnLista[0])
+                bool añadirUsuario = true;
+
+                foreach (string nombres in waitQueue)
                 {
-                    añadirUsuario = false;
+                    string[] usuarioEnLista = nombres.Split("-");
+                    if (nombreUsuario == usuarioEnLista[0])
+                    {
+                        añadirUsuario = false;
+                    }
+
+                }
+                if (añadirUsuario)
+                {
+                    string fecha = DateTime.Now.ToString("d");
+                    string hora = DateTime.Now.ToString("T");
+                    string concatenacion = nombreUsuario + "-" + fecha + " " + hora;
+                    waitQueue.Add(concatenacion);
+                    sw.WriteLine("OK");
+
+                }
+                else
+                {
+                    sw.WriteLine($"{nombreUsuario} ya esta en la cola");
                 }
 
             }
 
-            if (añadirUsuario)
-            {
-                string fecha = DateTime.Now.ToString("d");
-                string hora = DateTime.Now.ToString("T");
-                string concatenacion = nombreUsuario + "-" + fecha + " " + hora;
-                waitQueue.Add(concatenacion);
-                sw.WriteLine("OK");
-
-            }
-            else
-            {
-                sw.WriteLine($"{nombreUsuario} ya esta en la cola");
-            }
 
 
 
