@@ -13,7 +13,7 @@ namespace Ejercicio2
     internal class ChatRoom//Revisar uso de la colección
     {
         public bool ServerRunning { set; get; } = true;
-        public int Port { set; get; } = 31416;
+        public int Port { set; get; } = 135;
         public int[] puertosAlternativos = { 135, 135, 135, 234 };
         public bool puertoOcupado = true;
         private Socket s;
